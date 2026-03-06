@@ -3,7 +3,7 @@
 # mettre toujours git pull avant de faire des modifications et git push apres les modificatios
 #git commit -m fait un commit
 # esc et :wq pour enregistrer et quitter vim
-
+#git add . pour ajouter les fichiers ajoutes ou modifies
 
 
 from flask import Flask, render_template
