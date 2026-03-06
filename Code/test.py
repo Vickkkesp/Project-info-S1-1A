@@ -1,4 +1,4 @@
- # testFlask/Scripts/activate.ps1 (faut activer si pas en vert!!!)
+# testFlask/Scripts/activate.ps1 (faut activer si pas en vert!!!)
 #flask.exe --app test run
 # mettre toujours git pull avant de faire des modifications et git push apres les modificatios
 #git commit -m fait un commit
