@@ -1,9 +1,10 @@
-
-#for i in range(4):
-   # print("hello","hi","\t")
-   
-# testFlask/Scripts/activate.ps1 (faut activer si pas en vert!!!)
+ # testFlask/Scripts/activate.ps1 (faut activer si pas en vert!!!)
 #flask.exe --app test run
+# mettre toujours git pull avant de faire des modifications et git push apres les modificatios
+#git commit -m fait un commit
+# esc et :wq pour enregistrer et quitter vim
+
+
 
 from flask import Flask, render_template
 s="World !"
