@@ -7,7 +7,6 @@
 
 
 from flask import Flask, render_template
-s="World !"
 app = Flask(__name__)
 
 @app.route("/")
