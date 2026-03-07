@@ -11,11 +11,15 @@
         <p style="color:red;">{{ message }}</p>
     {% endif %}
 
-    <form method="POST">
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action = "/ajouter">
         <label for="username">Nom d'utilisateur :</label><br>
         <input type="text" id="username" name="username" required><br><br>
 
-        <label for="email">Email :</label><br>
+        <label for="email" >Email :</label><br>
         <input type="email" id="email" name="email" required><br><br>
 
         <label for="password">Mot de passe :</label><br>
