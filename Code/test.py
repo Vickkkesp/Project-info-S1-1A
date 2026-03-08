@@ -45,12 +45,53 @@ def page3_html():
 def page4_html():
  return render_template("Promotions.html") #page pour les promos
 
+@app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
+def index():
+    conn = sqlite3.connect("ProjetBdd.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM produits")
+    produits = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("Liste.html", produits=produits)
+
+
+@app.route("/Ajout_produit") #page pour ajouter des bijoux à la liste
+def Ajout_produits_html():
+  return render_template("Ajout_produit.html")
+
 @app.route("/pagetest")
 def pagetest_html():
  return render_template("index.html") #page test pour le code 
 
-@app.route("/ajouter", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
-def ajouter():
+@app.route("/ajouter_produit", methods = ["POST"])
+def ajouter_produit():
+  error = None
+
+    #recupération des infos depuis le formulaire
+  type_bijoux = request.form["Type"]
+  genre = request.form["Genre"]
+  prix = request.form["Prix"]
+  nom_bijoux = request.form["Nom_Bijoux"]
+
+  conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+  cursor = conn.cursor()
+
+  try :
+        cursor.execute("INSERT INTO produits (type_bijoux,genre,prix,nom_bijoux) VALUES (?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
+  except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
+        error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
+        conn.close() #on coupe la connection
+        return render_template("/Ajout_produit.html", error = error)
+  conn.commit()
+  conn.close()
+
+  return "Bijoux ajouté !"
+
+@app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
+def ajouter_utilisateur():
     error = None
     username = request.form["username"] #recupération du nom utilisateur du formulaire
     email = request.form["email"] #recuperation de l'email du formulaire
@@ -103,6 +144,7 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
         return "Bienvenue " + session["user"]
     else:
         return redirect("/login")
+
 
 
 if __name__ == '__main__':
