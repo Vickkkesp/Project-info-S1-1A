@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../../Test"
+		},
+		{
+			"name": "Project-info-S1-1A",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python-envs.defaultEnvManager": "ms-python.python:system"
+	}
+}
