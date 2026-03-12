@@ -8,8 +8,7 @@
 
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-from flask import Flask, render_template, request, redirect, session
-import sqlite3
+
 app = Flask(__name__)
 app.secret_key = "secret123"
 app.secret_key = "secret123"
@@ -163,7 +162,7 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
     return render_template("Promotions.html") #page pour les promos
 
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
-def index():
+def index10():
     conn = sqlite3.connect("ProjetBdd.db")
     cursor = conn.cursor()
 
