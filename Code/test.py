@@ -5,11 +5,11 @@ app.secret_key = "secret123"
 
 @app.route("/")
 def page_html():
- return render_template("Acueil.html") #page d'acceuil
+ return render_template("Accueil.html") #page d'acceuil
 
 @app.route("/page0")
 def page0_html():
- return render_template("Conexion.html") #page une fois connecté
+ return render_template("Connection.html") #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
@@ -21,7 +21,7 @@ def page01_html():
 
 @app.route("/page03")
 def page03_html():
- return render_template("deconextion.html")
+ return render_template("déconnection.html")
 
 @app.route("/page1")
 def page1_html():
