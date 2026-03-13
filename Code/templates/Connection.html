@@ -6,15 +6,21 @@
 </head>
 <body>
     <h1>Accueil</h1>
-
+    
+    
     {% if username %}
+        <center>
         <p>Bonjour, {{ username }} !</p>
         <a href="/page03">Se déconnecter</a>
+        </center>
     {% else %}
+        <center>
         <p>Vous n'êtes pas connecté.</p>
         <a href="/page01">Créer un compte</a>
         <br><br>
         <a href="/page02">Se connecter</a>
+        </center>
     {% endif %}
+
 </body>
 </html>
