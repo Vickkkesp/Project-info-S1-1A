@@ -39,6 +39,22 @@ def page3_html():
 def page4_html():
  return render_template("Promotions.html") #page pour les promos
 
+@app.route("/page5")
+def page5_html():
+ return render_template("Bagues.html") #page pour les bagues
+
+@app.route("/page6")
+def page6_html():
+ return render_template("boucles.html") #page pour les boucles d oreiles
+
+@app.route("/page7")
+def page7_html():
+ return render_template("collier.html") #page pour les colliers
+
+@app.route("/page8")
+def page8_html():
+ return render_template("montres.html") #page pour les montres
+
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
     conn = sqlite3.connect("ProjetBdd.db")
@@ -87,14 +103,15 @@ def ajouter_produit():
 @app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
 def ajouter_utilisateur():
     error = None
-    username = request.form["username"] #recupération du nom utilisateur du formulaire
+    prenom = request.form["prenom"]
+    nom = request.form["nom"] #recupération du nom utilisateur du formulaire
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
 
     conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
     cursor = conn.cursor()
     try :
-        cursor.execute("INSERT INTO utilisateurs (username,email,password) VALUES (?,?,?)", (username,email,password)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
+        cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password) VALUES (?,?,?,?)", (nom,prenom,email,password)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
     except sqlite3.IntegrityError: #si le nom utilisateur ou l'email est en double
       error = "nom d'utilisateur ou email déjà utilisé" #on crée une variable qui contient le message d'erreur
       conn.close() #on coupe la connection

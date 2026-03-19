@@ -1,4 +1,5 @@
 import sqlite3
+from flask import Flask, render_template, request, redirect, session
 
 def get_db():
     conn = sqlite3.connect("ProjectBdd.db")
@@ -17,8 +18,8 @@ SELECT v.date_vente AS jour,
                      SUM(b.quantite*l.prix_unitaire) AS chiffre_affaires
                      FROM vente v
                      JOIN ligne:vente l ON v.id = l.vente_id
-                     GROUP BY
-                     ORDER BY
+                     GROUP BY v.date_vente
+                     ORDER BY date
                      """)
 
     cursor.execute("SELECT strftime('%Y-%m', date_inscription) AS mois, COUNT(*) AS nombre_utilisateurs FROM utilisateurs GROUP BY mois")
