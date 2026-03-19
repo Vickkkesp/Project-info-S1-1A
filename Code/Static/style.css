@@ -39,9 +39,19 @@
 }
 
 .promo-box p {
-    /* Texte secondaire en blanc cassé ou doré léger */
-    color: #f4f4f4;
-    font-size: 1.1rem;
-    margin: 0;
+    font-size: 0.85rem;       /* Rend le texte plus petit */
+    color: #666;              /* Couleur un peu plus discrète */
+    margin-top: 20px;
 }
 
+.promo-box {
+    display: flex;          /* Active le mode flexible */
+    align-items: center;    /* Aligne verticalement au centre */
+    gap: 20px;              /* Espace entre l'image et le texte */
+    padding: 20px;
+    border: 1px solid #ddd; /* Optionnel : pour voir les limites */
+}
+
+.promo-box img {
+    float : left;
+}
