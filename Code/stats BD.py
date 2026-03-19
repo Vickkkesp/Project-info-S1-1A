@@ -17,7 +17,7 @@ SELECT v.date_vente AS jour,
                      SUM(b.quantite*l.prix_unitaire) AS chiffre_affaires
                      FROM vente v
                      JOIN ligne:vente l ON v.id = l.vente_id
-                     GROUP BY
+                     GROUP BY 
                      ORDER BY
                      """)
 
