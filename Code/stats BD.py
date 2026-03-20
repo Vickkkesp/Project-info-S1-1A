@@ -42,3 +42,5 @@ SELECT v.date_vente AS jour,
     plt.show()
 
     #faire des graphes pour des nombre de ventes par mois, chiffre d'affaires par mois, nombre d'utilisateurs, distribution de produits, 
+
+    
