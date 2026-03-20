@@ -126,22 +126,23 @@ def ajouter_utilisateur():
 def login():
 
     if request.method == "POST":
-        username = request.form["username"] #recupération du nom utilisateur
+        email = request.form["email"] #recupération du nom utilisateur
         password = request.form["password"] #recuperation du MDP
+        prenom = request.form["prenom"]
 
         conn = sqlite3.connect("ProjetBdd.db")
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM utilisateurs WHERE username=? AND password=?", # on récupère les infos correspondantes dans la BDD
-            (username, password)
+            "SELECT * FROM utilisateurs WHERE email=? AND password=?", # on récupère les infos correspondantes dans la BDD
+            (email, password)
         )
 
         user = cursor.fetchone()
         conn.close()
 
         if user: #on compare les infos rentrées et présente dans la BDD
-            session["user"] = username 
+            session["user"] = prenom 
             return redirect("/dashboard")
         else:
             return "Identifiants incorrects"
@@ -160,4 +161,3 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
 
 if __name__ == '__main__':
  app.run(debug=True)
- 

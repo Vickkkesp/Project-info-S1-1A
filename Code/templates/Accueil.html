@@ -2,9 +2,10 @@
 <html>
 <head>
  <title> Accueil</title>
+ <link rel="stylesheet" href="style.css">
  <style>
         body {
-            background-color: rgba(117, 71, 255, 0.382); 
+            background-color: rgba(196, 202, 167, 0.382); 
         }
         h1 {
             font-family: 'Berlin Sans FB Demi', serif;
@@ -12,11 +13,14 @@
             color: rgb(254, 255, 255);
         }
     </style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   
 </head>
 <body>
  <center> <h1>Impérial joaillerie</h1> </center>
  <center> <h2>L'élégance commence par un bijou qui vous ressemble. </h2> </center>
- <center><img src="{{ url_for('static', filename='images/image_acc1.jpg') }}"></center>
+ <!--<center><img src="{{ url_for('static', filename='images/image_acc1.jpg') }}"></center>-->
     
 
 <center><style id="q2g6te">
@@ -39,23 +43,73 @@
     display: block;
 }
 </style>
-
-
-<div class="produit-container" id="oyib9l">
+<!--<div class="produit-container" id="oyib9l">
 <a href="/page1">
 <img src="{{ url_for('static', filename='images/image_prod1.jpg') }}" 
 width="400" height="400" alt="Produit">
-</a>
+</a>-->
+
 
 <div class="produit-texte" id="ejig50">Produits</div>
 </div></center>
 
+<div class="promo-box">
+    <h1 class="badge">Offre Spéciale</h1>
+    <h1>-10% sur une grande sélection de bijoux ! *</h1>
+    <p>*Profitez de nos offres exclusives jusqu'au 4 avril.</p>
+
+ <img src="{{ url_for('static', filename='images/promotions.jpg') }}" 
+ width="400" height="400">
+
+</div>  
+
  <center><h2><a href="/page0">Connexion</a></h2></center>
 
-<div class="bague" id="oyib9m">
-<a href="/page5">
-<img src="{{ url_for('static', filename='images/image bague2.jpg') }}" 
-width="400" height="400" alt="Bagues">
-</a>
+
+<div class="ligne-images">
+
+
+ <div class="bague" id="oyib9m">
+ <a href="/page5">
+ <img src="{{ url_for('static', filename='images/image bague2.jpg') }}" 
+ width="400" height="400" alt="Bagues">
+ </a>
+ </div>
+
+
+ <div class="boucle" id="oyib9n">
+ <a href="/page6">
+ <img src="{{ url_for('static', filename='images/photo boucle.avif') }}" 
+ width="400" height="400" alt="boucles d'oreilles">
+ </a>
+ </div>
+
+
+ <div class="montre" id="oyib9o">
+ <a href="/page8">
+ <img src="{{ url_for('static', filename='images/photo-montre.webp') }}" 
+ width="400" height="400" alt="Montres">
+ </a>
+ </div>
+
+
+ <div class="collier" id="oyib9p">
+ <a href="/page7">
+ <img src="{{ url_for('static', filename='images/image collier.jpg') }}" 
+ width="400" height="400" alt="Colliers">
+ </a>
+ </div>
+</div>
+
+
+<div class="logo">
+ <img src="{{ url_for('static', filename='images/image-livraison-offerte.png') }}">
+ <img src="{{ url_for('static', filename='images/image-livraison.webp') }}">
+ <img src="{{ url_for('static', filename='images/image-satisfait.png') }}">
+</div>
+
 </body>
 </html>
+
+
+ 

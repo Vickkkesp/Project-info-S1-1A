@@ -1,19 +1,19 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, session
+import matplotlib.pyplot as plt
 
 def get_db():
     conn = sqlite3.connect("ProjectBdd.db")
     conn.row_factory = sqlite3.Row
     return conn
 
-import matplotlib.pyplot as plt
-from db import get_db
+conn = sqlite3.connect("ProjetBdd.db")
+cursor = conn.cursor()
 
 def graphique_utilisateurs():
-    conn = get_db()
-    db= Projet_Bdd.db()
+    
 
-    rows= db.execute("""
+    rows= cursor.execute("""
 SELECT v.date_vente AS jour,
                      SUM(b.quantite*l.prix_unitaire) AS chiffre_affaires
                      FROM vente v
@@ -30,8 +30,8 @@ SELECT v.date_vente AS jour,
     cursor.execute("SELECT strftime('%Y-%m', date_inscription) AS mois, COUNT(*) AS nombre_utilisateurs FROM utilisateurs GROUP BY mois")
     resultats = cursor.fetchall()
 
-    mois = [row['mois'] for row in resultats]
-    nombre_utilisateurs = [row['nombre_utilisateurs'] for row in resultats]
+    mois = [rows['mois'] for rows in resultats]
+    nombre_utilisateurs = [rows['nombre_utilisateurs'] for rows in resultats]
 
     plt.bar(mois, nombre_utilisateurs)
     plt.xlabel('Mois')
