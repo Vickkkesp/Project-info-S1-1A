@@ -55,6 +55,38 @@ def page7_html():
 def page8_html():
  return render_template("montres.html") #page pour les montres
 
+@app.route("/page9")
+def page9_html():
+ return render_template("montre-or.html") #page pour les montres or
+
+@app.route("/page10")
+def page10_html():
+ return render_template("montre-argent.html") #page pour les montres argent
+
+@app.route("/page11")
+def page11_html():
+ return render_template("Notre-histoire.html") #page pour notre histoire
+
+@app.route("/page12")
+def page12_html():
+ return render_template("contact.html") #page pour nos contacts
+
+@app.route("/page13")
+def page13_html():
+ return render_template("collier-or.html") #page pour les colliers en or
+
+@app.route("/page14")
+def page14_html():
+ return render_template("collier-argent.html") #page pour les colliers en argent
+
+@app.route("/page15")
+def page15_html():
+ return render_template("bague-or.html") #page pour les bagues en or
+
+@app.route("/page16")
+def page16_html():
+ return render_template("bagues-argent.html") #page pour les bagues en argent
+
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
     conn = sqlite3.connect("ProjetBdd.db")
@@ -103,51 +135,50 @@ def ajouter_produit():
 @app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
 def ajouter_utilisateur():
     error = None
+    conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+    cursor = conn.cursor()
+
     prenom = request.form["prenom"]
     nom = request.form["nom"] #recupération du nom utilisateur du formulaire
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
+    telephone = request.form["telephone"]
 
-    conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
-    cursor = conn.cursor()
+    
     try :
-        cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password) VALUES (?,?,?,?)", (nom,prenom,email,password)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
+        cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password,telephone) VALUES (?,?,?,?,?)", (nom,prenom,email,password,telephone)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
     except sqlite3.IntegrityError: #si le nom utilisateur ou l'email est en double
       error = "nom d'utilisateur ou email déjà utilisé" #on crée une variable qui contient le message d'erreur
       conn.close() #on coupe la connection
       return render_template("/creation_compte.html", error = error) #envoie le message d'erreur vers la page HTML
-
+    
     conn.commit()
     conn.close()
 
     return "Utilisateur ajouté !"
 
 @app.route("/login", methods=["POST"]) #fonction pour la connection depuis la page autentification
+@app.route("/login", methods=["POST"])
 def login():
-
-    
-    email = request.form["email"] #recupération du nom utilisateur
-    password = request.form["password"] #recuperation du MDP
-    prenom = request.form["prenom"]
+    email = request.form["email"]
+    password = request.form["password"]
 
     conn = sqlite3.connect("ProjetBdd.db")
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM utilisateurs WHERE email=? AND password=?", # on récupère les infos correspondantes dans la BDD
+        "SELECT * FROM utilisateurs WHERE email=? AND password=?",
         (email, password)
     )
-
     user = cursor.fetchone()
     conn.close()
 
-    if user: #on compare les infos rentrées et présente dans la BDD
-        session["user"] = prenom 
+    if user:
+        session["user"] = email
         return redirect("/dashboard")
     else:
         return "Identifiants incorrects"
     
-    return render_template("login.html")
 
 @app.route("/dashboard")
 def dashboard(): #si les identifiants sont corrects on affiche cette page
@@ -155,7 +186,7 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
     if "user" in session:
         return "Bienvenue " + session["user"]
     else:
-        return redirect("/login")
+        return redirect("/connection.html")
 
 
 
