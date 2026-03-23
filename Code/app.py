@@ -122,31 +122,31 @@ def ajouter_utilisateur():
 
     return "Utilisateur ajouté !"
 
-@app.route("/login", methods=["GET", "POST"]) #fonction pour la connection depuis la page autentification
+@app.route("/login", methods=["POST"]) #fonction pour la connection depuis la page autentification
 def login():
 
-    if request.method == "POST":
-        email = request.form["email"] #recupération du nom utilisateur
-        password = request.form["password"] #recuperation du MDP
-        prenom = request.form["prenom"]
+    
+    email = request.form["email"] #recupération du nom utilisateur
+    password = request.form["password"] #recuperation du MDP
+    prenom = request.form["prenom"]
 
-        conn = sqlite3.connect("ProjetBdd.db")
-        cursor = conn.cursor()
+    conn = sqlite3.connect("ProjetBdd.db")
+    cursor = conn.cursor()
 
-        cursor.execute(
-            "SELECT * FROM utilisateurs WHERE email=? AND password=?", # on récupère les infos correspondantes dans la BDD
-            (email, password)
-        )
+    cursor.execute(
+        "SELECT * FROM utilisateurs WHERE email=? AND password=?", # on récupère les infos correspondantes dans la BDD
+        (email, password)
+    )
 
-        user = cursor.fetchone()
-        conn.close()
+    user = cursor.fetchone()
+    conn.close()
 
-        if user: #on compare les infos rentrées et présente dans la BDD
-            session["user"] = prenom 
-            return redirect("/dashboard")
-        else:
-            return "Identifiants incorrects"
-
+    if user: #on compare les infos rentrées et présente dans la BDD
+        session["user"] = prenom 
+        return redirect("/dashboard")
+    else:
+        return "Identifiants incorrects"
+    
     return render_template("login.html")
 
 @app.route("/dashboard")
