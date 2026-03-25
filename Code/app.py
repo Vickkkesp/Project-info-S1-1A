@@ -31,11 +31,11 @@ def page_connection():
     message = ""  # Initialize message to avoid UnboundLocalError
     if request.method == "POST":
         # Récupération des données du formulaire
-        username = request.form["username"]
+        email = request.form["email"]
         password = request.form["password"]
 
         # Vérification des identifiants (exemple simplifié)
-        if username == "admin" and password == "key admin":
+        if email == "nathan.assens@gmail.com" and password == "kk":
             session["admin"] = True
             return redirect("/admin")
         
