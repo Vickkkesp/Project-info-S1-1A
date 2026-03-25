@@ -17,7 +17,7 @@ def deconnexion():
 @app.route("/admin")
 def admin():
     if "admin" not in session:
-        return redirect("/connection") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
+        return redirect("/page0") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
     
     graphique_utilisateurs() #appel de la fonction pour faire le graphe du nombre d'utilisateurs inscrits par mois
     chiffreAffaire() #appel de la fonction pour faire le graphe du chiffre d'affaire par mois
@@ -26,8 +26,9 @@ def admin():
     return render_template("Admin.html") #page admin pour afficher les graphes
 
 
-@app.route("/connection",methods=["GET","POST"])
+@app.route("/page0",methods=["GET","POST"])
 def page_connection():
+    message = ""  # Initialize message to avoid UnboundLocalError
     if request.method == "POST":
         # Récupération des données du formulaire
         username = request.form["username"]
