@@ -1,5 +1,7 @@
+from email import message
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -7,9 +9,39 @@ app.secret_key = "secret123"
 def page_html():
  return render_template("Accueil.html") #page d'acceuil
 
-@app.route("/page0")
-def page0_html():
- return render_template("Connection.html") #page une fois connecté
+@app.route("/deconnexion")
+def deconnexion():
+    session.clear()
+    return redirect("/")
+
+@app.route("/admin")
+def admin():
+    if "admin" not in session:
+        return redirect("/connection") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
+    
+    graphique_utilisateurs() #appel de la fonction pour faire le graphe du nombre d'utilisateurs inscrits par mois
+    chiffreAffaire() #appel de la fonction pour faire le graphe du chiffre d'affaire par mois
+    distribution_produits() #appel de la fonction pour faire le graphe de la distribution des produits
+    ventes_par_mois() #appel de la fonction pour faire le graphe du nombre de ventes par mois
+    return render_template("Admin.html") #page admin pour afficher les graphes
+
+
+@app.route("/connection",methods=["GET","POST"])
+def page_connection():
+    if request.method == "POST":
+        # Récupération des données du formulaire
+        username = request.form["username"]
+        password = request.form["password"]
+
+        # Vérification des identifiants (exemple simplifié)
+        if username == "admin" and password == "key admin":
+            session["admin"] = True
+            return redirect("/admin")
+        
+        else:
+            message = "Identifiants incorrects."
+
+    return render_template("Connection.html", message=message) #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
