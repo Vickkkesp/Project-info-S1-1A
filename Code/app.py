@@ -28,25 +28,15 @@ def admin():
 
 @app.route("/page0",methods=["GET","POST"])
 def page_connection():
-    message = ""  # Initialize message to avoid UnboundLocalError
-    if request.method == "POST":
-        # Récupération des données du formulaire
-        email = request.form["email"]
-        password = request.form["password"]
+    
 
-        # Vérification des identifiants (exemple simplifié)
-        if email == "nathan.assens@gmail.com" and password == "kk":
-            session["admin"] = True
-            return redirect("/admin")
-        
-        else:
-            message = "Identifiants incorrects."
-
-    return render_template("Connection.html", message=message) #page une fois connecté
+    return render_template("Connection.html") #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
- return render_template("autentification.html") #page de connexion 
+    message = ""  # Initialize message to avoid UnboundLocalError
+    
+    return render_template("autentification.html",message = message) #page de connexion 
 
 @app.route("/page01")
 def page01_html():
@@ -120,6 +110,14 @@ def page15_html():
 def page16_html():
  return render_template("bagues-argent.html") #page pour les bagues en argent
 
+@app.route("/page17")
+def page17_html():
+ return render_template("boucle-or.html") #page pour les boucle en or
+
+@app.route("/page18")
+def page18_html():
+ return render_template("boucle-argent.html") #page pour les bagues en argent
+
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
     conn = sqlite3.connect("ProjetBdd.db")
@@ -190,7 +188,7 @@ def ajouter_utilisateur():
 
     return "Utilisateur ajouté !"
 
-@app.route("/login", methods=["POST"]) #fonction pour la connection depuis la page autentification
+#fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form["email"]
@@ -205,8 +203,15 @@ def login():
     )
     user = cursor.fetchone()
     conn.close()
+    email = request.form["email"]
+    password = request.form["password"]
 
-    if user:
+        # Vérification des identifiants (exemple simplifié)
+    if email == "nathan.assens@gmail.com" and password == "kk":
+        session["admin"] = True
+        return render_template("Admin.html")
+        
+    elif user:
         session["user"] = email
         return redirect("/dashboard")
     else:
@@ -220,8 +225,6 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
         return "Bienvenue " + session["user"]
     else:
         return redirect("/connection.html")
-
-
 
 if __name__ == '__main__':
  app.run(debug=True)
