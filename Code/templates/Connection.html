@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+ <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: rgba(222, 218, 187, 0.382); 
+        }
+        
+    </style>
     <meta charset="UTF-8">
-    <title>Accueil</title>
+    <center><title>CONNEXION</title></center>
 </head>
 <body>
-    <h1>Accueil</h1>
-
+    
+    
     {% if username %}
+        <center>
         <p>Bonjour, {{ username }} !</p>
         <a href="/page03">Se déconnecter</a>
+        </center>
     {% else %}
-        <p>Vous n'êtes pas connecté.</p>
-        <a href="/page01">Créer un compte</a>
-        <br><br>
-        <a href="/page02">Se connecter</a>
+        <div class="card">
+         <p>Vous n'êtes pas connecté.</p>
+         <a href="/page01">Créer un compte</a>
+         <br><br>
+         <a href="/page02">Se connecter</a>
+        </div>
     {% endif %}
+
 </body>
 </html>
+
