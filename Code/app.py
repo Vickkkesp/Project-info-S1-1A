@@ -28,9 +28,27 @@ def admin():
 
 @app.route("/page0",methods=["GET","POST"])
 def page_connection():
+<<<<<<< HEAD
     
 
     return render_template("Connection.html") #page une fois connecté
+=======
+    message = ""  # Initialize message to avoid UnboundLocalError
+    if request.method == "POST":
+        # Récupération des données du formulaire
+        email = request.form["email"]
+        password = request.form["password"]
+
+        # Vérification des identifiants (exemple simplifié)
+        if email == "nathan.assens@gmail.com" and password == "kk":
+            session["admin"] = True
+            return redirect("/admin")
+        
+        else:
+            message = "Identifiants incorrects."
+
+    return render_template("Connection.html", message=message) #page une fois connecté
+>>>>>>> ff35845bd17405e378a58f66c2ea8bb0d90f8a71
 
 @app.route("/page02")
 def page02_html():
