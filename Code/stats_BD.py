@@ -1,8 +1,15 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, session
 import matplotlib.pyplot as plt
+import os
 
 DBB_NAME = "ProjetBdd.db"
+GRAPHS_DIR = "static/graphs"
+
+def ensure_graphs_dir():
+    """Créer le dossier graphs s'il n'existe pas"""
+    if not os.path.exists(GRAPHS_DIR):
+        os.makedirs(GRAPHS_DIR, exist_ok=True)
 
 def get_db(): #ex fonction pour se connecter à la bdd
     conn = sqlite3.connect(DBB_NAME)
@@ -11,6 +18,7 @@ def get_db(): #ex fonction pour se connecter à la bdd
 
 
 def graphique_utilisateurs():
+    ensure_graphs_dir()
     db= get_db()
 
     req= """SELECT strftime('%Y-%m', date_inscription) AS mois,
@@ -38,12 +46,13 @@ def graphique_utilisateurs():
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    plt.savefig("static/graphs/graph_utilisateurs.png")
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_utilisateurs.png"))
     plt.close()
 
     #faire des graphes pour des nombre de ventes par mois, chiffre d'affaires par mois, nombre d'utilisateurs, distribution de produits, 
 
 def chiffreAffaire(mois,annee):
+    ensure_graphs_dir()
     #mois=input("Entrez le mois (format MM): ")
     #annee=input("Entrez l'année (format YYYY): ")
     db= get_db()
@@ -51,9 +60,9 @@ def chiffreAffaire(mois,annee):
 
     req = """
          SELECT vente.date_vente AS date_vente, 
-         SUM(vente.qte_vente * produit.prix) AS CA
+         SUM(vente.qte_vente * produits.prix) AS CA
          FROM vente
-         JOIN produit ON vente.id_produit = produit.id_produit
+         JOIN produits ON vente.id_produit = produits.id_produit
          WHERE strftime('%m',vente.date_vente)= ?
          AND strftime('%Y',vente.date_vente)= ?
          GROUP BY vente.date_vente
@@ -78,12 +87,13 @@ def chiffreAffaire(mois,annee):
     plt.xticks(rotation=45)
 
     plt.tight_layout()
-    plt.savefig("static/graphs/graph_chiffre_affaire.png")
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_chiffre_affaire.png"))
     plt.close()
 
 #chiffreAffaire("04", "2024")
 
 def distribution_produits(): 
+    ensure_graphs_dir()
     db= get_db() 
     req = """
          SELECT produits.type_bijoux, 
@@ -109,10 +119,11 @@ def distribution_produits():
     plt.title('Distribution du type de produits')
 
     plt.tight_layout()
-    plt.savefig("static/graphs/graph_distribution_produits.png")
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_distribution_produits.png"))
     plt.close()
 
 def ventes_par_mois():
+    ensure_graphs_dir()
     db= get_db()
     req ="""
          SELECT strftime('%Y-%m', date_vente) AS mois,
@@ -142,5 +153,5 @@ def ventes_par_mois():
        
 
     plt.tight_layout()
-    plt.savefig("static/graphs/graph_ventes_par_mois.png")
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_ventes_par_mois.png"))
     plt.close()

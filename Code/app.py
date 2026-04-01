@@ -28,11 +28,6 @@ def admin():
 
 @app.route("/page0",methods=["GET","POST"])
 def page_connection():
-<<<<<<< HEAD
-    
-
-    return render_template("Connection.html") #page une fois connecté
-=======
     message = ""  # Initialize message to avoid UnboundLocalError
     if request.method == "POST":
         # Récupération des données du formulaire
@@ -40,16 +35,13 @@ def page_connection():
         password = request.form["password"]
 
         # Vérification des identifiants (exemple simplifié)
-    if email == "nathan.assens@gmail.com" and password == "kk":
+        if email == "nathan.assens@gmail.com" and password == "kk":
             session["admin"] = True
-            
             return redirect("/admin")
-        
-    else:
+        else:
             message = "Identifiants incorrects."
 
     return render_template("Connection.html", message=message) #page une fois connecté
->>>>>>> ff35845bd17405e378a58f66c2ea8bb0d90f8a71
 
 @app.route("/page02")
 def page02_html():
@@ -244,6 +236,42 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
         return "Bienvenue " + session["user"]
     else:
         return redirect("/connection.html")
+
+# Route pour générer les graphes
+@app.route("/generer_graphes", methods=["GET", "POST"])
+def generer_graphes():
+    if "admin" not in session:
+        return redirect("/page0")  # Protéger la page - seulement l'admin peut la voir
+    
+    if request.method == "POST":
+        type_graphe = request.form.get("type_graphe")
+        
+        try:
+            if type_graphe == "utilisateurs":
+                graphique_utilisateurs()
+                message = "Graphe des utilisateurs généré avec succès!"
+            elif type_graphe == "chiffre_affaire":
+                mois = request.form.get("mois")
+                annee = request.form.get("annee")
+                if mois and annee:
+                    chiffreAffaire(mois, annee)
+                    message = f"Graphe du chiffre d'affaire pour {mois}/{annee} généré avec succès!"
+                else:
+                    message = "Veuillez entrer le mois et l'année!"
+            elif type_graphe == "distribution":
+                distribution_produits()
+                message = "Graphe de distribution des produits généré avec succès!"
+            elif type_graphe == "ventes":
+                ventes_par_mois()
+                message = "Graphe des ventes par mois généré avec succès!"
+            else:
+                message = "Type de graphe invalide!"
+        except Exception as e:
+            message = f"Erreur lors de la génération du graphe: {str(e)}"
+    else:
+        message = ""
+    
+    return render_template("generer_graphes.html", message=message)
 
 if __name__ == '__main__':
  app.run(debug=True)
