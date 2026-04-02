@@ -165,11 +165,11 @@ def ajouter_produit():
   conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
   cursor = conn.cursor()
   
-  type_bijoux = cursor.execute("SELECT * FROM type WHERE type = ?", (type))
-  type_matiere = cursor.execute("SELECT * WHERE FROM Matiere matiere = ?",(matiere))
+  type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
+  type_matiere = cursor.execute("SELECT * FROM  Matiere WHERE matiere = ?",(matiere,))
 
   try :
-        cursor.execute("INSERT INTO produits (id_bijoux,genre,prix,nom_bijoux,id_matiere) VALUES (?,?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux,type_matiere)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
+        cursor.execute("INSERT INTO produits (id_type,genre,prix,nom_bijoux,id_matiere) VALUES (?,?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux,type_matiere)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
