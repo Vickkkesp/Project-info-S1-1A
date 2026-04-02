@@ -156,16 +156,20 @@ def ajouter_produit():
   error = None
 
     #recupération des infos depuis le formulaire
-  type_bijoux = request.form["Type"]
+  type = request.form["Type"]
   genre = request.form["Genre"]
   prix = request.form["Prix"]
   nom_bijoux = request.form["Nom_Bijoux"]
+  matiere = request.form["Matiere"]
 
   conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
   cursor = conn.cursor()
+  
+  type_bijoux = cursor.execute("SELECT * FROM type WHERE type = ?", (type))
+  type_matiere = cursor.execute("SELECT * WHERE FROM Matiere matiere = ?",(matiere))
 
   try :
-        cursor.execute("INSERT INTO produits (type_bijoux,genre,prix,nom_bijoux) VALUES (?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
+        cursor.execute("INSERT INTO produits (id_bijoux,genre,prix,nom_bijoux,id_matiere) VALUES (?,?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux,type_matiere)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
