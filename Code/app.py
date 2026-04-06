@@ -1,5 +1,6 @@
 from email import message
 from flask import Flask, render_template, request, redirect, session
+from hashlib import sha512
 import sqlite3
 from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
 app = Flask(__name__)
@@ -38,7 +39,6 @@ def page_connection():
         if email == "nathan.assens@gmail.com" and password == "kk":
             session["admin"] = True
             return redirect("/admin")
-        
         else:
             message = "Identifiants incorrects."
 
@@ -46,7 +46,9 @@ def page_connection():
 
 @app.route("/page02")
 def page02_html():
- return render_template("autentification.html") #page de connexion 
+    message = ""  # Initialize message to avoid UnboundLocalError
+    
+    return render_template("autentification.html",message = message) #page de connexion 
 
 @app.route("/page01")
 def page01_html():
@@ -120,6 +122,14 @@ def page15_html():
 def page16_html():
  return render_template("bagues-argent.html") #page pour les bagues en argent
 
+@app.route("/page17")
+def page17_html():
+ return render_template("boucle-or.html") #page pour les boucle en or
+
+@app.route("/page18")
+def page18_html():
+ return render_template("boucle-argent.html") #page pour les bagues en argent
+
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
     conn = sqlite3.connect("ProjetBdd.db")
@@ -146,16 +156,20 @@ def ajouter_produit():
   error = None
 
     #recupération des infos depuis le formulaire
-  type_bijoux = request.form["Type"]
+  type = request.form["Type"]
   genre = request.form["Genre"]
   prix = request.form["Prix"]
   nom_bijoux = request.form["Nom_Bijoux"]
+  matiere = request.form["Matiere"]
 
   conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
   cursor = conn.cursor()
+  
+  type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
+  type_matiere = cursor.execute("SELECT * FROM  Matiere WHERE matiere = ?",(matiere,))
 
   try :
-        cursor.execute("INSERT INTO produits (type_bijoux,genre,prix,nom_bijoux) VALUES (?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
+        cursor.execute("INSERT INTO produits (id_type,genre,prix,nom_bijoux,id_matiere) VALUES (?,?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux,type_matiere)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
@@ -176,7 +190,8 @@ def ajouter_utilisateur():
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
     telephone = request.form["telephone"]
-
+    password = password.encode()
+    password = sha512(password).hexdigest()
     
     try :
         cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password,telephone) VALUES (?,?,?,?,?)", (nom,prenom,email,password,telephone)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
@@ -190,7 +205,7 @@ def ajouter_utilisateur():
 
     return "Utilisateur ajouté !"
 
-@app.route("/login", methods=["POST"]) #fonction pour la connection depuis la page autentification
+#fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form["email"]
@@ -203,10 +218,22 @@ def login():
         "SELECT * FROM utilisateurs WHERE email=? AND password=?",
         (email, password)
     )
+    password = password.encode()
+    password = sha512(password).hexdigest()
     user = cursor.fetchone()
     conn.close()
+    emailR = request.form["email"]
+    passwordR = request.form["password"]
+    passwordR = passwordR.encode()
+    passwordR = sha512(passwordR).hexdigest()
+    mdp_Admin = 'kk'.encode()
 
-    if user:
+        # Vérification des identifiants (exemple simplifié)
+    if email == "nathan.assens@gmail.com" and password == sha512(mdp_Admin).hexdigest():
+        session["admin"] = True
+        return render_template("Admin.html")
+        
+    elif password == passwordR and email == emailR:
         session["user"] = email
         return redirect("/dashboard")
     else:
@@ -221,7 +248,41 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
     else:
         return redirect("/connection.html")
 
-
+# Route pour générer les graphes
+@app.route("/generer_graphes", methods=["GET", "POST"])
+def generer_graphes():
+    if "admin" not in session:
+        return redirect("/page0")  # Protéger la page - seulement l'admin peut la voir
+    
+    if request.method == "POST":
+        type_graphe = request.form.get("type_graphe")
+        
+        try:
+            if type_graphe == "utilisateurs":
+                graphique_utilisateurs()
+                message = "Graphe des utilisateurs généré avec succès!"
+            elif type_graphe == "chiffre_affaire":
+                mois = request.form.get("mois")
+                annee = request.form.get("annee")
+                if mois and annee:
+                    chiffreAffaire(mois, annee)
+                    message = f"Graphe du chiffre d'affaire pour {mois}/{annee} généré avec succès!"
+                else:
+                    message = "Veuillez entrer le mois et l'année!"
+            elif type_graphe == "distribution":
+                distribution_produits()
+                message = "Graphe de distribution des produits généré avec succès!"
+            elif type_graphe == "ventes":
+                ventes_par_mois()
+                message = "Graphe des ventes par mois généré avec succès!"
+            else:
+                message = "Type de graphe invalide!"
+        except Exception as e:
+            message = f"Erreur lors de la génération du graphe: {str(e)}"
+    else:
+        message = ""
+    
+    return render_template("generer_graphes.html", message=message)
 
 if __name__ == '__main__':
  app.run(debug=True)
