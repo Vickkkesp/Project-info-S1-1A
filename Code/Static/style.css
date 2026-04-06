@@ -10,6 +10,14 @@
     gap: 20px;
 }
 
+.login-link {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+}
 
 .promo-box {
     /* Fond bordeaux sur toute la largeur */
@@ -55,3 +63,90 @@
 .promo-box img {
     float : left;
 }
+
+.titre {
+    font-family: "Bodoni MT", serif;
+    font-size: 120px;
+    color: black;
+    margin-bottom: 10px; /* espace réduit sous le titre */
+}
+
+.slogan {
+    font-family: "Bodoni MT", serif;
+    font-size: 30px;
+    color: black;
+    margin-top: 0; /* colle le texte au titre */
+}
+
+.card {
+  width: 300px;
+  margin: 50px auto; /* centre le cadre */
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.card p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.card a {
+  display: inline-block;
+  margin: 8px 0;
+  padding: 10px 15px;
+  background: #f3f3f3;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.card a:hover {
+  background: #ffffff;
+}
+
+
+.dropdownmenu {
+  background-color:rgb(225, 228, 177);
+  display: flex;
+}
+.dropdownmenu ul {
+  display: none;
+}
+.dropdownmenu,
+.dropdownmenu ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+.dropdownmenu a {
+  display: block;
+  width: 100px;
+  height: 35px;
+  line-height: 35px;
+  color: #000000;
+  background-color:rgb(225, 228, 177);
+  text-decoration: none;
+  padding: 3px 10px;
+  text-align: center;
+}
+.dropdownmenu li {
+  position: relative;
+}
+.dropdownmenu li:hover ul {
+  display: block;
+  position: absolute;
+  top: 41px;
+  left: 0px;
+  z-index: 100;
+}
+.dropdownmenu ul a:hover {
+  background-color: #ac9933;
+}
+

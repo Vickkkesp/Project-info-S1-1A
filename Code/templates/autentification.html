@@ -6,7 +6,7 @@
 </head>
 <style>
         body {
-            background-color: rgba(117, 71, 255, 0.382); 
+            background-color: rgba(222, 218, 187, 0.382); 
     
         }
         </style>
@@ -18,9 +18,10 @@
         <p style="color:red;">{{ message }}</p>
     {% endif %}
 
+    
     <form method="POST" action ="/login">
-        <label for="username">Nom d'utilisateur :</label><br>
-        <input type="text" id="username" name="username" required><br><br>
+        <label for="email">Email :</label><br>
+        <input type="text" id="email" name="email" required><br><br>
 
         <label for="password">Mot de passe :</label><br>
         <input type="password" id="password" name="password" required><br><br>
@@ -28,9 +29,12 @@
         <button type="submit">Se connecter</button>
     </form>
 
-    <br>
+    
+    <a href="/page01">Pas encore de compte ? S'inscrire</a></center>
+
+<br>
     <a href="/">Retour à l'accueil</a>
     <br><br>
-    <a href="/page01">Pas encore de compte ? S'inscrire</a></center>
+
 </body>
 </html>

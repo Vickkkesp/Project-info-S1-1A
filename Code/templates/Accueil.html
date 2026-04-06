@@ -3,26 +3,52 @@
 <head>
  <title> Accueil</title>
  <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
  <style>
         body {
-            background-color: rgba(196, 202, 167, 0.382); 
+            background-color: rgba(217, 211, 163, 0.382); 
         }
         h1 {
-            font-family: 'Berlin Sans FB Demi', serif;
-            font-size: 60px;
-            color: rgb(254, 255, 255);
+            font-family: 'Bodoni MT';"
+            font-size: 120px;
+            color: rgb(0, 0, 0); 
         }
     </style>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-   
+  
 </head>
 <body>
- <center> <h1>Impérial joaillerie</h1> </center>
- <center> <h2>L'élégance commence par un bijou qui vous ressemble. </h2> </center>
- <!--<center><img src="{{ url_for('static', filename='images/image_acc1.jpg') }}"></center>-->
-    
+    <a href="/page0" class="login-link">Connexion</a>
 
+ <center> <h1 class="titre">Impérial joaillerie</h1> </center>
+ <center> <p class="slogan">L'élégance commence par un bijou qui vous ressemble.</p>
+ </center>
+ <!--<center><img src="{{ url_for('static', filename='images/image_acc1.jpg') }}"></center>-->
+
+ <ul class="dropdownmenu">
+    <li><a href="/page4">Soldes</a></li>
+    <li><a href="/page5">Bagues</a>
+        <ul>
+            <li><a href="/page15">Or</a></li>
+            <li><a href="/page16">Argent</a></li>
+        </ul>
+    </li>
+    <li><a href="/page7">Colliers</a>
+        <ul>
+            <li><a href="/page13">Or</a></li>
+            <li><a href="/page14">Argent</a></li>
+        </ul>
+     </li>
+     <li><a href="/page8">Montres</a>
+        <ul>
+            <li><a href="/page9">Or</a></li>
+            <li><a href="/page10">Argent</a></li>
+        </ul>
+     </li>
+     <li><a href="/page11">Notre Histoire</a>
+     </li>
+     <li><a href="/page12">Nos contacts</a>
+     </li>
+</ul>
 <center><style id="q2g6te">
 .produit-container {
     text-align: center;
@@ -63,8 +89,6 @@ width="400" height="400" alt="Produit">
 
 </div>  
 
- <center><h2><a href="/page0">Connexion</a></h2></center>
-
 
 <div class="ligne-images">
 
@@ -102,14 +126,15 @@ width="400" height="400" alt="Produit">
 </div>
 
 
-<div class="logo">
+<div class="logo" id="oyib5p">
  <img src="{{ url_for('static', filename='images/image-livraison-offerte.png') }}">
- <img src="{{ url_for('static', filename='images/image-livraison.webp') }}">
+ <img src="{{ url_for('static', filename='images/image-livraison.jpg.webp') }}">
  <img src="{{ url_for('static', filename='images/image-satisfait.png') }}">
-</div>
+ </div>
 
+<div class="deconnexion" id="01">
+ <a href="/deconnexion">Se déconnecter
+ </a>
+ </div>
 </body>
 </html>
-
-
- 
