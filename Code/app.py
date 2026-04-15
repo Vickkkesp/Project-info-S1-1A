@@ -1,6 +1,5 @@
 from email import message
 from flask import Flask, render_template, request, redirect, session
-from hashlib import sha512
 import sqlite3
 from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
 app = Flask(__name__)
@@ -42,7 +41,7 @@ def page_connection():
         else:
             message = "Identifiants incorrects."
 
-    return render_template("Connection.html", message=message) #page une fois connecté
+    return render_template("Connection.html", message = message) #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
@@ -190,8 +189,6 @@ def ajouter_utilisateur():
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
     telephone = request.form["telephone"]
-    password = password.encode()
-    password = sha512(password).hexdigest()
     
     try :
         cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password,telephone) VALUES (?,?,?,?,?)", (nom,prenom,email,password,telephone)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
@@ -218,22 +215,16 @@ def login():
         "SELECT * FROM utilisateurs WHERE email=? AND password=?",
         (email, password)
     )
-    password = password.encode()
-    password = sha512(password).hexdigest()
     user = cursor.fetchone()
     conn.close()
-    emailR = request.form["email"]
-    passwordR = request.form["password"]
-    passwordR = passwordR.encode()
-    passwordR = sha512(passwordR).hexdigest()
-    mdp_Admin = 'kk'.encode()
 
-        # Vérification des identifiants (exemple simplifié)
-    if email == "nathan.assens@gmail.com" and password == sha512(mdp_Admin).hexdigest():
+    # Vérification des identifiants admin
+    if email == "nathan.assens@gmail.com" and password == "kk":
         session["admin"] = True
-        return render_template("Admin.html")
-        
-    elif password == passwordR and email == emailR:
+        return redirect("/admin")
+
+    # Vérification des identifiants utilisateur normal
+    elif user:
         session["user"] = email
         return redirect("/dashboard")
     else:
