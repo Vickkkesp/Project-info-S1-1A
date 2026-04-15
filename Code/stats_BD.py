@@ -12,6 +12,50 @@ def ensure_graphs_dir():
     if not os.path.exists(GRAPHS_DIR):
         os.makedirs(GRAPHS_DIR, exist_ok=True)
 
+def init_db():
+    """Initialiser la base de données avec les tables nécessaires"""
+    conn = sqlite3.connect(DBB_NAME)
+    cursor = conn.cursor()
+    
+    # Créer la table utilisateurs si elle n'existe pas
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS utilisateurs (
+            id_utilisateur INTEGER PRIMARY KEY AUTOINCREMENT,
+            nom TEXT NOT NULL,
+            prenom TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            telephone TEXT,
+            admin_acces INTEGER DEFAULT 0
+        )
+    """)
+    
+    # Créer la table produits si elle n'existe pas
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS produits (
+            id_produit INTEGER PRIMARY KEY AUTOINCREMENT,
+            type_bijoux TEXT,
+            genre TEXT,
+            prix REAL,
+            nom_bijoux TEXT UNIQUE
+        )
+    """)
+    
+    # Créer la table vente si elle n'existe pas
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS vente (
+            id_Vente INTEGER PRIMARY KEY AUTOINCREMENT,
+            qte_vente INTEGER,
+            date_vente TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            id_produit INTEGER,
+            id_utilisateur INTEGER,
+            FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
+        )
+    """)
+    
+    conn.commit()
+    conn.close()
+
 def get_db(): #ex fonction pour se connecter à la bdd
     conn = sqlite3.connect(DBB_NAME)
     conn.row_factory = sqlite3.Row

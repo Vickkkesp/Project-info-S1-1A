@@ -1,9 +1,12 @@
 from email import message
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
+from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
+
+# Initialiser la base de données au démarrage
+init_db()
 
 @app.route("/")
 def page_html():
