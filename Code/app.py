@@ -222,7 +222,7 @@ def login():
 
     cursor.execute(
         "SELECT * FROM utilisateurs WHERE email=? AND password=?",
-        (email, password);
+        (email, password)
     )
     user = cursor.fetchone()
     conn.close()
