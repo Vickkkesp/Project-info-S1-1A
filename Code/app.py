@@ -22,10 +22,20 @@ def admin():
     if "admin" not in session:
         return redirect("/page0") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
     
-    graphique_utilisateurs() #appel de la fonction pour faire le graphe du nombre d'utilisateurs inscrits par mois
-    chiffreAffaire() #appel de la fonction pour faire le graphe du chiffre d'affaire par mois
-    distribution_produits() #appel de la fonction pour faire le graphe de la distribution des produits
-    ventes_par_mois() #appel de la fonction pour faire le graphe du nombre de ventes par mois
+    import os
+    graphs_dir = os.path.join(app.static_folder, 'graphs')
+    os.makedirs(graphs_dir, exist_ok=True)  # S'assurer que le répertoire existe
+    
+    # Générer les graphes seulement s'ils n'existent pas déjà
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_utilisateurs.png')):
+        graphique_utilisateurs()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_chiffre_affaire.png')):
+        chiffreAffaire()  # Utilise la date actuelle par défaut
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_distribution_produits.png')):
+        distribution_produits()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_ventes_par_mois.png')):
+        ventes_par_mois()
+    
     return render_template("Admin.html") #page admin pour afficher les graphes
 
 

@@ -135,18 +135,20 @@ def chiffreAffaire(mois=None, annee=None):
             X.append(ligne["date_vente"])
             Y.append(ligne["CA"])
         
-    plt.figure()
-    plt.bar(X,Y)
+    plt.figure(figsize=(12, 5))
+    if X and Y:
+        plt.bar(X, Y, color='steelblue')
+    else:
+        plt.text(0.5, 0.5, f'Aucune donnée pour {mois}/{annee}', ha='center', va='center', transform=plt.gca().transAxes)
     plt.xlabel('Jour')
-    plt.ylabel('Chifre Affaire')
-    plt.title('Chiffre Affaire du mois de: ' + mois + '/' +annee)
+    plt.ylabel('Chiffre Affaire (€)')
+    plt.title(f'Chiffre Affaire du mois de {mois}/{annee}')
     plt.xticks(rotation=45)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_chiffre_affaire.png"))
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_chiffre_affaire.png"), dpi=100, bbox_inches='tight')
     plt.close()
 
-#chiffreAffaire("04", "2024")
 
 def distribution_produits(): 
     ensure_graphs_dir()
@@ -200,14 +202,32 @@ def ventes_par_mois():
             X.append(ligne["mois"])
             Y.append(ligne["nombre_ventes"])
 
-    plt.figure()
-    plt.bar(X,Y)
-    plt.xlabel('Mois')
-    plt.ylabel('Nombre de ventes')
-    plt.title('Nombre de ventes par mois')
-    plt.xticks(rotation=45)
-       
-
+    # Créer une figure plus grande pour mieux espacer les éléments
+    plt.figure(figsize=(16, 8))
+    
+    # Créer le graphique en barres avec une couleur plus visible
+    bars = plt.bar(X, Y, color='skyblue', edgecolor='navy', linewidth=1, alpha=0.7)
+    
+    # Améliorer les labels des axes
+    plt.xlabel('Mois (YYYY-MM)', fontsize=12, fontweight='bold')
+    plt.ylabel('Nombre de ventes', fontsize=12, fontweight='bold')
+    plt.title('Évolution du nombre de ventes par mois', fontsize=14, fontweight='bold', pad=20)
+    
+    # Améliorer l'affichage des dates sur l'axe X
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    
+    # Ajouter une grille pour faciliter la lecture
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    
+    # Ajouter les valeurs sur les barres si elles ne sont pas trop nombreuses
+    if len(X) <= 20:  # Seulement si pas trop de barres pour éviter l'encombrement
+        for bar, valeur in zip(bars, Y):
+            plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1, 
+                    str(valeur), ha='center', va='bottom', fontsize=9, fontweight='bold')
+    
+    # Ajuster les marges pour que tout soit visible
     plt.tight_layout()
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_ventes_par_mois.png"))
+    
+    # Sauvegarder avec une meilleure qualité
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_ventes_par_mois.png"), dpi=150, bbox_inches='tight')
     plt.close()
