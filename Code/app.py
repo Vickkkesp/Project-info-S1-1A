@@ -201,6 +201,16 @@ def ajouter_utilisateur():
     conn.close()
 
     return "Utilisateur ajouté !"
+    
+@app.route("/dashboard")
+def dashboard(): #si les identifiants sont corrects on affiche cette page
+
+    if "user" in session:
+        return "Bienvenue " + session["user"]
+    else:
+        return redirect("/connection.html")
+    
+
 
 #fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
@@ -229,15 +239,6 @@ def login():
         return redirect("/dashboard")
     else:
         return "Identifiants incorrects"
-    
-
-@app.route("/dashboard")
-def dashboard(): #si les identifiants sont corrects on affiche cette page
-
-    if "user" in session:
-        return "Bienvenue " + session["user"]
-    else:
-        return redirect("/connection.html")
 
 # Route pour générer les graphes
 @app.route("/generer_graphes", methods=["GET", "POST"])

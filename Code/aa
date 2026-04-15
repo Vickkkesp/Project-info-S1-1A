@@ -1,0 +1,27 @@
+#fonction pour la connection depuis la page autentification
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form["email"]
+    password = request.form["password"]
+
+    conn = sqlite3.connect("ProjetBdd.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM utilisateurs WHERE email=? AND password=?",
+        (email, password)
+    )
+    user = cursor.fetchone()
+    conn.close()
+
+    # Vérification des identifiants admin
+    if email == "nathan.assens@gmail.com" and password == "kk":
+        session["admin"] = True
+        return redirect("/admin")
+
+    # Vérification des identifiants utilisateur normal
+    elif user:
+        session["user"] = email
+        return redirect("/dashboard")
+    else:
+        return "Identifiants incorrects"
