@@ -1,5 +1,6 @@
 from email import message
 from flask import Flask, render_template, request, redirect, session
+from hashlib import sha512
 import sqlite3
 from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
 app = Flask(__name__)
@@ -155,16 +156,20 @@ def ajouter_produit():
   error = None
 
     #recupération des infos depuis le formulaire
-  type_bijoux = request.form["Type"]
+  type = request.form["Type"]
   genre = request.form["Genre"]
   prix = request.form["Prix"]
   nom_bijoux = request.form["Nom_Bijoux"]
+  matiere = request.form["Matiere"]
 
   conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
   cursor = conn.cursor()
+  
+  type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
+  type_matiere = cursor.execute("SELECT * FROM  Matiere WHERE matiere = ?",(matiere,))
 
   try :
-        cursor.execute("INSERT INTO produits (type_bijoux,genre,prix,nom_bijoux) VALUES (?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
+        cursor.execute("INSERT INTO produits (id_type,genre,prix,nom_bijoux,id_matiere) VALUES (?,?,?,?,?)", (type_bijoux,genre,prix,nom_bijoux,type_matiere)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouveau bijoux
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
@@ -185,7 +190,8 @@ def ajouter_utilisateur():
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
     telephone = request.form["telephone"]
-
+    password = password.encode()
+    password = sha512(password).hexdigest()
     
     try :
         cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password,telephone) VALUES (?,?,?,?,?)", (nom,prenom,email,password,telephone)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
@@ -212,17 +218,22 @@ def login():
         "SELECT * FROM utilisateurs WHERE email=? AND password=?",
         (email, password)
     )
+    password = password.encode()
+    password = sha512(password).hexdigest()
     user = cursor.fetchone()
     conn.close()
-    email = request.form["email"]
-    password = request.form["password"]
+    emailR = request.form["email"]
+    passwordR = request.form["password"]
+    passwordR = passwordR.encode()
+    passwordR = sha512(passwordR).hexdigest()
+    mdp_Admin = 'kk'.encode()
 
         # Vérification des identifiants (exemple simplifié)
-    if email == "nathan.assens@gmail.com" and password == "kk":
+    if email == "nathan.assens@gmail.com" and password == sha512(mdp_Admin).hexdigest():
         session["admin"] = True
         return render_template("Admin.html")
         
-    elif user:
+    elif password == passwordR and email == emailR:
         session["user"] = email
         return redirect("/dashboard")
     else:
