@@ -197,7 +197,7 @@ def ajouter_produit():
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
-        return render_template("/Ajout_produit.html", error = error)
+        return render_template("Ajout_produit.html", error = error)
   conn.commit()
   conn.close()
 
@@ -220,7 +220,7 @@ def ajouter_utilisateur():
     except sqlite3.IntegrityError: #si le nom utilisateur ou l'email est en double
       error = "nom d'utilisateur ou email déjà utilisé" #on crée une variable qui contient le message d'erreur
       conn.close() #on coupe la connection
-      return render_template("/creation_compte.html", error = error) #envoie le message d'erreur vers la page HTML
+      return render_template("creation_compte.html", error = error) #envoie le message d'erreur vers la page HTML
     
     conn.commit()
     conn.close()
@@ -233,7 +233,7 @@ def dashboard(): #si les identifiants sont corrects on affiche cette page
     if "user" in session:
         return "Bienvenue " + session["user"]
     else:
-        return redirect("/connection.html")
+        return redirect("/page0")
     
 
 #fonction pour la connection depuis la page autentification
@@ -367,14 +367,6 @@ def supprimer_panier(id_produit):
 
     session["panier"] = panier
     return redirect("/panier")
-
-@app.route("/vider_panier", methods=["POST"])
-    session["panier"] = []
-    return redirect("/panier")
-
-
-
-
 
 
 if __name__ == '__main__':
