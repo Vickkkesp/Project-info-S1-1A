@@ -170,3 +170,134 @@
   
 }
 
+/* Palette de couleurs */
+:root {
+    --beige: #F5F5DC;
+    --bordeaux: #660011;
+    --or: #D4AF37;
+    --blanc: #FFFFFF;
+    --noir: #1a1a1a;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--beige);
+    color: var(--noir);
+}
+
+/* Navigation fixe en haut */
+nav {
+    background-color: var(--blanc);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    border-bottom: 2px solid var(--bordeaux);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--bordeaux);
+    letter-spacing: 3px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--noir);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--bordeaux);
+}
+
+/* Grille de produits */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 50px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background: var(--blanc);
+    border: 1px solid #eee;
+    text-align: center;
+    padding-bottom: 20px;
+    transition: 0.4s;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.product-image {
+    width: 100%;
+    height: 300px;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.product-info h3 {
+    font-family: 'Playfair Display', serif;
+    margin: 20px 0 10px;
+    font-size: 1.3rem;
+}
+
+.price {
+    color: var(--bordeaux);
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.btn-add {
+    background-color: var(--bordeaux);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-add:hover {
+    background-color: #4a000c;
+}
+
+/* Footer */
+footer {
+    background-color: var(--blanc);
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--bordeaux);
+    margin-top: 50px;
+}
+
+footer p {
+    font-size: 0.9rem;
+    color: #666;
+}
