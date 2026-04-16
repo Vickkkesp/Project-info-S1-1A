@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 
-DBB_NAME = "ProjetBdd1.db"
-GRAPHS_DIR = "static/graphs"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DBB_NAME = os.path.join(BASE_DIR, "ProjetBdd1.db")
+GRAPHS_DIR = os.path.join(BASE_DIR, "static", "graphs")
 
 def ensure_graphs_dir():
     """Créer le dossier graphs s'il n'existe pas"""
@@ -37,7 +38,8 @@ def init_db():
             type_bijoux TEXT,
             genre TEXT,
             prix REAL,
-            nom_bijoux TEXT UNIQUE
+            nom_bijoux TEXT UNIQUE,
+            stock INTEGER DEFAULT 0
         )
     """)
     
@@ -52,7 +54,53 @@ def init_db():
             FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
         )
     """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS panier (
+            id_panier INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER UNIQUE,
+            FOREIGN KEY(id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ligne_panier (
+            id_ligne_panier INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_panier INTEGER,
+            id_produit INTEGER,
+            quantite INTEGER NOT NULL,
+            FOREIGN KEY(id_panier) REFERENCES panier(id_panier),
+            FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS commande (
+            id_commande INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER,
+            total REAL,
+            date_commande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ligne_commande (
+            id_ligne_commande INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_commande INTEGER,
+            id_produit INTEGER,
+            quantite INTEGER,
+            prix_unitaire REAL,
+            FOREIGN KEY(id_commande) REFERENCES commande(id_commande),
+            FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
+        )
+    """)
     
+    # Ajouter la colonne stock si elle manque dans une ancienne base
+    existing_columns = [row[1] for row in conn.execute("PRAGMA table_info(produits)")]
+    if "stock" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN stock INTEGER DEFAULT 0")
+
     conn.commit()
     conn.close()
 

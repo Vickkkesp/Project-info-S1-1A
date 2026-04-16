@@ -54,7 +54,7 @@ def page_connection():
             return redirect("/admin")
         
         # Vérification des identifiants utilisateur normal
-        conn = sqlite3.connect("ProjetBdd1.db")
+        conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
             "SELECT * FROM utilisateurs WHERE email=? AND password=?",
@@ -65,6 +65,7 @@ def page_connection():
         
         if user:
             session["user"] = email
+            session["id_utilisateur"] = user[0]
             return redirect("/dashboard")
         else:
             message = "Identifiants incorrects."
@@ -172,7 +173,7 @@ def page18_html():
 
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
-    conn = sqlite3.connect("ProjetBdd1.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM produits")
@@ -202,7 +203,7 @@ def ajouter_produit():
   nom_bijoux = request.form["Nom_Bijoux"]
   matiere = request.form["Matiere"]
 
-  conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
+  conn = get_db() # connexion à la BDD
   cursor = conn.cursor()
   
   type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
@@ -222,7 +223,7 @@ def ajouter_produit():
 @app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
 def ajouter_utilisateur():
     error = None
-    conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
+    conn = get_db() # connexion à la BDD
     cursor = conn.cursor()
 
     prenom = request.form["prenom"]
@@ -258,7 +259,7 @@ def login():
     email = request.form["email"]
     password = request.form["password"]
 
-    conn = sqlite3.connect("ProjetBdd1.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute(
@@ -276,6 +277,7 @@ def login():
     # Vérification des identifiants utilisateur normal
     elif user:
         session["user"] = email
+        session["id_utilisateur"] = user[0]
         return redirect("/dashboard")
     else:
         return "Identifiants incorrects"
@@ -330,65 +332,283 @@ def bagues():
     return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
 
 
-@app.route("/ajouter_pannier/<int:id_produit>", methods=["POST"])
-def ajouter_pannier(id_produit):
+@app.route("/panier")
+def afficher_panier():
+    if "id_utilisateur" not in session:
+        return redirect("/page0")
+
+    id_utilisateur = session["id_utilisateur"]
+    id_panier = get_or_create_panier(id_utilisateur)
+
     db = get_db()
-    produit = db.execute(
-        "SELECT id_produit, prix, nom_bijoux FROM produits WHERE id_produit = ?",
-        (id_produit,)
-    ).fetchone()
+
+    lignes = db.execute("""
+        SELECT lp.id_ligne_panier, lp.quantite,
+               p.id_produit, p.nom_bijoux AS nom, p.prix, p.stock,
+               (lp.quantite * p.prix) AS sous_total
+        FROM ligne_panier lp
+        JOIN produits p ON lp.id_produit = p.id_produit
+        WHERE lp.id_panier = ?
+    """, (id_panier,)).fetchall()
+
+    total = sum(ligne["sous_total"] for ligne in lignes)
+    nb_articles = sum(ligne["quantite"] for ligne in lignes)
+
     db.close()
 
+    return render_template(
+        "panier.html",
+        lignes=lignes,
+        total=total,
+        nb_articles=nb_articles
+    )
+
+@app.route("/panier/vider", methods=["POST"])
+def vider_panier():
+    if "id_utilisateur" not in session:
+        return redirect("/page0")
+
+    id_utilisateur = session["id_utilisateur"]
+    id_panier = get_or_create_panier(id_utilisateur)
+
+    db = get_db()
+    db.execute(
+        "DELETE FROM ligne_panier WHERE id_panier = ?",
+        (id_panier,)
+    )
+    db.commit()
+    db.close()
+
+    return redirect("/panier")
+
+def get_or_create_panier(id_utilisateur):
+    db = get_db()
+
+    panier = db.execute(
+        "SELECT * FROM panier WHERE id_utilisateur = ?",
+        (id_utilisateur,)
+    ).fetchone()
+
+    if panier is None:
+        db.execute(
+            "INSERT INTO panier (id_utilisateur) VALUES (?)",
+            (id_utilisateur,)
+        )
+        db.commit()
+
+        panier = db.execute(
+            "SELECT * FROM panier WHERE id_utilisateur = ?",
+            (id_utilisateur,)
+        ).fetchone()
+
+    db.close()
+    return panier["id_panier"]
+
+@app.route("/panier/ajouter/<int:id_produit>", methods=["POST"])
+def ajouter_panier(id_produit):
+    if "id_utilisateur" not in session:
+        return redirect("/page0")
+
+    id_utilisateur = session["id_utilisateur"]
+    id_panier = get_or_create_panier(id_utilisateur)
+
+    db = get_db()
+
+    produit = db.execute(
+        "SELECT * FROM produits WHERE id_produit = ?",
+        (id_produit,)
+    ).fetchone()
+
     if produit is None:
-        return redirect("/Liste_produits")  # Rediriger si le produit n'existe pas
+        db.close()
+        return redirect("/")
 
-    if "pannier" not in session:
-        session["pannier"] = []
+    ligne = db.execute(
+        "SELECT * FROM ligne_panier WHERE id_panier = ? AND id_produit = ?",
+        (id_panier, id_produit)
+    ).fetchone()
 
-    pannier = session["pannier"]
-    trouve = False
+    quantite_actuelle = ligne["quantite"] if ligne else 0
 
-    for article in pannier:
-        if article["id_produit"] == produit["id_produit"]:
-            article["quantite"] += 1
-            trouve = True
-            break
+    if quantite_actuelle + 1 > produit["stock"]:
+        db.close()
+        return "Stock insuffisant"
 
-    if not trouve:
-        pannier.append({
-            "id_produit": produit["id_produit"],
-            "nom_bijoux": produit["nom_bijoux"],
-            "prix": produit["prix"],
-            "quantite": 1
-        })
+    if ligne:
+        db.execute(
+            "UPDATE ligne_panier SET quantite = quantite + 1 WHERE id_ligne_panier = ?",
+            (ligne["id_ligne_panier"],)
+        )
+    else:
+        db.execute(
+            "INSERT INTO ligne_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)",
+            (id_panier, id_produit, 1)
+        )
 
-    session["pannier"] = pannier
-    return redirect("/Liste_produits")
+    db.commit()
+    db.close()
 
-@app.route("/pannier")
-def pannier():
-    pannier = session.get("pannier", [])
+    return redirect("/panier")
+
+@app.route("/panier/augmenter/<int:id_ligne>", methods=["POST"])
+def augmenter_quantite(id_ligne):
+    db = get_db()
+
+    ligne = db.execute("""
+        SELECT lp.*, p.stock
+        FROM ligne_panier lp
+        JOIN produits p ON lp.id_produit = p.id_produit
+        WHERE lp.id_ligne_panier = ?
+    """, (id_ligne,)).fetchone()
+
+    if ligne and ligne["quantite"] < ligne["stock"]:
+        db.execute(
+            "UPDATE ligne_panier SET quantite = quantite + 1 WHERE id_ligne_panier = ?",
+            (id_ligne,)
+        )
+        db.commit()
+
+    db.close()
+    return redirect("/panier")
+
+@app.route("/panier/diminuer/<int:id_ligne>", methods=["POST"])
+def diminuer_quantite(id_ligne):
+    db = get_db()
+
+    ligne = db.execute(
+        "SELECT * FROM ligne_panier WHERE id_ligne_panier = ?",
+        (id_ligne,)
+    ).fetchone()
+
+    if ligne:
+        if ligne["quantite"] > 1:
+            db.execute(
+                "UPDATE ligne_panier SET quantite = quantite - 1 WHERE id_ligne_panier = ?",
+                (id_ligne,)
+            )
+        else:
+            db.execute(
+                "DELETE FROM ligne_panier WHERE id_ligne_panier = ?",
+                (id_ligne,)
+            )
+        db.commit()
+
+    db.close()
+    return redirect("/panier")
+
+@app.route("/panier/supprimer/<int:id_ligne>", methods=["POST"])
+def supprimer_ligne_panier(id_ligne):
+    db = get_db()
+    db.execute(
+        "DELETE FROM ligne_panier WHERE id_ligne_panier = ?",
+        (id_ligne,)
+    )
+    db.commit()
+    db.close()
+
+    return redirect("/panier")
+
+def nombre_articles_panier(id_utilisateur):
+    db = get_db()
+
+    panier = db.execute(
+        "SELECT * FROM panier WHERE id_utilisateur = ?",
+        (id_utilisateur,)
+    ).fetchone()
+
+    if panier is None:
+        db.close()
+        return 0
+
+    total = db.execute("""
+        SELECT COALESCE(SUM(quantite), 0) AS total
+        FROM ligne_panier
+        WHERE id_panier = ?
+    """, (panier["id_panier"],)).fetchone()["total"]
+
+    db.close()
+    return total
+
+@app.route("/panier/valider", methods=["POST"])
+def valider_panier():
+    if "id_utilisateur" not in session:
+        return redirect("/page0")
+
+    id_utilisateur = session["id_utilisateur"]
+    id_panier = get_or_create_panier(id_utilisateur)
+
+    db = get_db()
+
+    lignes = db.execute("""
+        SELECT lp.id_ligne_panier, lp.id_produit, lp.quantite,
+               p.prix, p.stock
+        FROM ligne_panier lp
+        JOIN produits p ON lp.id_produit = p.id_produit
+        WHERE lp.id_panier = ?
+    """, (id_panier,)).fetchall()
+
+    if not lignes:
+        db.close()
+        return "Le panier est vide"
 
     total = 0
-    for article in pannier:
-        total += article["prix"] * article["quantite"]
+    for ligne in lignes:
+        if ligne["quantite"] > ligne["stock"]:
+            db.close()
+            return "Stock insuffisant pour un produit"
+        total += ligne["quantite"] * ligne["prix"]
 
-    return render_template("pannier.html", pannier=pannier, total=total)
+    db.execute(
+        "INSERT INTO commande (id_utilisateur, total) VALUES (?, ?)",
+        (id_utilisateur, total)
+    )
+    db.commit()
 
-@app.route("/supprimer_pannier/<int:id_produit>", methods=["POST"])
-def supprimer_pannier(id_produit):
-    pannier = session.get("pannier", [])
+    commande = db.execute(
+        "SELECT last_insert_rowid() AS id_commande"
+    ).fetchone()
 
-    pannier = [article for article in pannier if article["id_produit"] != id_produit]
+    id_commande = commande["id_commande"]
 
-    session["pannier"] = pannier
-    return redirect("/pannier")
+    for ligne in lignes:
+        db.execute("""
+            INSERT INTO ligne_commande (id_commande, id_produit, quantite, prix_unitaire)
+            VALUES (?, ?, ?, ?)
+        """, (id_commande, ligne["id_produit"], ligne["quantite"], ligne["prix"]))
 
+        db.execute("""
+            UPDATE produits
+            SET stock = stock - ?
+            WHERE id_produit = ?
+        """, (ligne["quantite"], ligne["id_produit"]))
 
-@app.route("/vider_pannier", methods=["POST"])
-def vider_pannier():
-    session["pannier"] = []
-    return redirect("/pannier")
+    db.execute(
+        "DELETE FROM ligne_panier WHERE id_panier = ?",
+        (id_panier,)
+    )
+
+    db.commit()
+    db.close()
+
+    return redirect("/panier")
+
+@app.route("/commandes")
+def afficher_commandes():
+    if "id_utilisateur" not in session:
+        return redirect("/page0")
+
+    id_utilisateur = session["id_utilisateur"]
+    db = get_db()
+
+    commandes = db.execute("""
+        SELECT * FROM commande
+        WHERE id_utilisateur = ?
+        ORDER BY date_commande DESC
+    """, (id_utilisateur,)).fetchall()
+
+    db.close()
+    return render_template("commandes.html", commandes=commandes)
+
 
 
 if __name__ == '__main__':
