@@ -48,11 +48,11 @@ def page_connection():
         password = request.form["password"]
 
         # Vérification des identifiants (exemple simplifié)
-        if email == "nathan.assens@gmail.com" and password == "kk":
-            session["admin"] = True
-            return redirect("/admin")
-        else:
-            message = "Identifiants incorrects."
+    elif email == "nathan.assens@gmail.com" and password == "kk":
+        session["admin"] = True
+        return redirect("/admin")
+    else:
+        message = "Identifiants incorrects."
 
     return render_template("Connection.html", message = message) #page une fois connecté
 
@@ -157,7 +157,7 @@ def page18_html():
 
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
-    conn = sqlite3.connect("ProjetBdd.db")
+    conn = sqlite3.connect("ProjetBdd1.db")
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM produits")
@@ -187,7 +187,7 @@ def ajouter_produit():
   nom_bijoux = request.form["Nom_Bijoux"]
   matiere = request.form["Matiere"]
 
-  conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+  conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
   cursor = conn.cursor()
   
   type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
@@ -207,7 +207,7 @@ def ajouter_produit():
 @app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
 def ajouter_utilisateur():
     error = None
-    conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+    conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
     cursor = conn.cursor()
 
     prenom = request.form["prenom"]
@@ -243,7 +243,7 @@ def login():
     email = request.form["email"]
     password = request.form["password"]
 
-    conn = sqlite3.connect("ProjetBdd.db")
+    conn = sqlite3.connect("ProjetBdd1.db")
     cursor = conn.cursor()
 
     cursor.execute(

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 
-DBB_NAME = "ProjetBdd.db"
+DBB_NAME = "ProjetBdd1.db"
 GRAPHS_DIR = "static/graphs"
 
 def ensure_graphs_dir():
