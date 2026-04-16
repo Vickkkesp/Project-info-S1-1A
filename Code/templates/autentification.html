@@ -1,23 +1,16 @@
 {% extends "base.html" %}
 
-{% set titre = "Connection" %}
+{% set titre = "Connexion" %}
 
 {% block content %}
-<style>
-    body {
-        background-color: rgba(222, 218, 187, 0.382); 
-    
-    }
-</style>
-<center>
-    <h1>Connection</h1>
+<div style="text-align: center; padding-top: 50px;">
+    <h1>Connexion</h1>
 
     {% if message %}
         <p style="color:red;">{{ message }}</p>
     {% endif %}
 
-    
-    <form method="POST" action ="/login">
+    <form method="POST" action="/login" style="max-width: 400px; margin: 0 auto;">
         <label for="email">Email :</label><br>
         <input type="text" id="email" name="email" required><br><br>
 
@@ -27,10 +20,9 @@
         <button type="submit">Se connecter</button>
     </form>
 
-    
-    <a href="/page01">Pas encore de compte ? S'inscrire</a></center>
-
-<br>
-    <a href="/">Retour à l'accueil</a>
+    <br>
+    <a href="/page01">Pas encore de compte ? S'inscrire</a>
     <br><br>
+    <a href="/">Retour à l'accueil</a>
+</div>
 {% endblock %}
