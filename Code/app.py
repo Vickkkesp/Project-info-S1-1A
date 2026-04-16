@@ -41,19 +41,35 @@ def admin():
 @app.route("/page0",methods=["GET","POST"])
 def page_connection():
     message = ""  # Initialize message to avoid UnboundLocalError
+    username = session.get("user", None)  # Récupérer l'utilisateur de la session s'il existe
+    
     if request.method == "POST":
         # Récupération des données du formulaire
         email = request.form["email"]
         password = request.form["password"]
 
-        # Vérification des identifiants (exemple simplifié)
+        # Vérification des identifiants admin
         if email == "nathan.assens@gmail.com" and password == "kk":
             session["admin"] = True
             return redirect("/admin")
+        
+        # Vérification des identifiants utilisateur normal
+        conn = sqlite3.connect("ProjetBdd1.db")
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM utilisateurs WHERE email=? AND password=?",
+            (email, password)
+        )
+        user = cursor.fetchone()
+        conn.close()
+        
+        if user:
+            session["user"] = email
+            return redirect("/dashboard")
         else:
             message = "Identifiants incorrects."
 
-    return render_template("Connection.html", message = message) #page une fois connecté
+    return render_template("Connection.html", message=message, username=username) #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
@@ -314,8 +330,8 @@ def bagues():
     return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
 
 
-@app.route("/ajouter_panier/<int:id_produit>", methods=["POST"])
-def ajouter_panier(id_produit):
+@app.route("/ajouter_pannier/<int:id_produit>", methods=["POST"])
+def ajouter_pannier(id_produit):
     db = get_db()
     produit = db.execute(
         "SELECT id_produit, prix, nom_bijoux FROM produits WHERE id_produit = ?",
@@ -326,47 +342,53 @@ def ajouter_panier(id_produit):
     if produit is None:
         return redirect("/Liste_produits")  # Rediriger si le produit n'existe pas
 
-    if "panier" not in session:
-        session["panier"] = []
+    if "pannier" not in session:
+        session["pannier"] = []
 
-    panier = session["panier"]
+    pannier = session["pannier"]
     trouve = False
 
-    for article in panier:
+    for article in pannier:
         if article["id_produit"] == produit["id_produit"]:
             article["quantite"] += 1
             trouve = True
             break
 
     if not trouve:
-        panier.append({
+        pannier.append({
             "id_produit": produit["id_produit"],
             "nom_bijoux": produit["nom_bijoux"],
             "prix": produit["prix"],
             "quantite": 1
         })
 
-    session["panier"] = panier
+    session["pannier"] = pannier
     return redirect("/Liste_produits")
 
-@app.route("/panier")
-def panier():
-    panier = session.get("panier", [])
+@app.route("/pannier")
+def pannier():
+    pannier = session.get("pannier", [])
 
     total = 0
-    for article in panier:
+    for article in pannier:
         total += article["prix"] * article["quantite"]
 
-    return render_template("panier.html", panier=panier, total=total)
+    return render_template("pannier.html", pannier=pannier, total=total)
 
-@app.route("/supprimer_panier/<int:id_produit>", methods=["POST"])
-def supprimer_panier(id_produit):
-    panier = session.get("panier", [])
+@app.route("/supprimer_pannier/<int:id_produit>", methods=["POST"])
+def supprimer_pannier(id_produit):
+    pannier = session.get("pannier", [])
 
-    panier = [article for article in panier if article["id_produit"] != id_produit]
+    pannier = [article for article in pannier if article["id_produit"] != id_produit]
 
-    session["panier"] = panier
-    return redirect("/panier")
+    session["pannier"] = pannier
+    return redirect("/pannier")
+
+
+@app.route("/vider_pannier", methods=["POST"])
+def vider_pannier():
+    session["pannier"] = []
+    return redirect("/pannier")
 
 
 if __name__ == '__main__':
