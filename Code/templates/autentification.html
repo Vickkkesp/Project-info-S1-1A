@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Connection</title>
-</head>
+{% extends "base.html" %}
+
+{% set titre = "Connection" %}
+
+{% block content %}
 <style>
-        body {
-            background-color: rgba(222, 218, 187, 0.382); 
+    body {
+        background-color: rgba(222, 218, 187, 0.382); 
     
-        }
-        </style>
-<body>
-    <center>
+    }
+</style>
+<center>
     <h1>Connection</h1>
 
     {% if message %}
@@ -35,6 +33,4 @@
 <br>
     <a href="/">Retour à l'accueil</a>
     <br><br>
-
-</body>
-</html>
+{% endblock %}
