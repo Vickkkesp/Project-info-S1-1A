@@ -1,16 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
- <title> Notre histoire</title>
- <link rel="stylesheet" href="style.css">
- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
- <style>
-        body {
-            background-color: rgba(217, 211, 163, 0.382); 
-        }
-        h1 {
-            font-family: 'Bodoni MT';"
-            font-size: 120px;
-            color: rgb(0, 0, 0); 
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Maison Luxe - {{ titre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">MAISON LUXE</div>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/page5">Bagues</a></li>
+                <li><a href="/page7">Colliers</a></li>
+                <li><a href="/page8">Montres</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
+        <p>Expertise . Élégance . Tradition</p>
+    </footer>
+
+</body>
+</html>

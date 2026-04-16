@@ -88,7 +88,12 @@ def page4_html():
 
 @app.route("/page5")
 def page5_html():
- return render_template("Bagues.html") #page pour les bagues
+    liste_bagues = [
+        {"nom": "Alliance Éclat", "prix": 1200, "image": "bague1.jpg"},
+        {"nom": "Solitaire Impérial", "prix": 2500, "image": "bague2.jpg"},
+        {"nom": "Chevalière Or", "prix": 950, "image": "bague3.jpg"}
+    ]
+    return render_template("Bagues.html", titre="Collection Bagues", produits=liste_bagues) #page pour les bagues
 
 @app.route("/page6")
 def page6_html():
@@ -96,11 +101,19 @@ def page6_html():
 
 @app.route("/page7")
 def page7_html():
- return render_template("collier.html") #page pour les colliers
+ liste_colliers = [
+        {"nom": "Rivière d'Argent", "prix": 1800, "image": "collier1.jpg"},
+        {"nom": "Sautoir Perles", "prix": 3200, "image": "collier2.jpg"}
+ ]
+ return render_template("collier.html", titre="Collection Colliers", produits=liste_colliers) #page pour les colliers
 
 @app.route("/page8")
 def page8_html():
- return render_template("montres.html") #page pour les montres
+ liste_montres = [
+        {"nom": "Chronographe Bordeaux", "prix": 4500, "image": "montre1.jpg"},
+        {"nom": "L'Automatique Or", "prix": 7800, "image": "montre2.jpg"}
+    ]
+ return render_template("montres.html", titre="Collection Montres", produits=liste_montres) #page pour les montres
 
 @app.route("/page9")
 def page9_html():
@@ -288,6 +301,19 @@ def generer_graphes():
         message = ""
     
     return render_template("generer_graphes.html", message=message)
+
+
+from flask import Flask, render_template
+
+@app.route('/bagues')
+def bagues():
+    # Simulation de base de données
+    liste_bagues = [
+        {"nom": "Bague Éternité", "prix": 1250, "image": "bague1.jpg"},
+        {"nom": "Solitaire Royal", "prix": 3400, "image": "bague2.jpg"},
+        {"nom": "Anneau Bordeaux Gold", "prix": 890, "image": "bague3.jpg"},
+    ]
+    return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
 
 if __name__ == '__main__':
  app.run(debug=True)
