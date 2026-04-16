@@ -1,23 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title> Notre histoire</title>
- <link rel="stylesheet" href="style.css">
- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
- <style>
-        body {
-            background-color: rgba(217, 211, 163, 0.382); 
-        }
-        h1 {
-            font-family: 'Bodoni MT';"
-            font-size: 120px;
-            color: rgb(0, 0, 0); 
-        }
-    </style>
-  
-</head>
-<body>
-    <a href="/page0" class="login-link">Connexion</a>
+{% extends "base.html" %}
+
+{% block content %}
 
     <div class="titre-container">
         <center><h1>Notre Histoire</h1></center>
@@ -37,3 +20,4 @@
     </div>
 </body>
 </html>
+{% endblock %}

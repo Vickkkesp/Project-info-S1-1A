@@ -1,18 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title> Accueil</title>
- <link rel="stylesheet" href="style.css">
- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
- <style>
-        body {
-            background-color: rgba(217, 211, 163, 0.382); 
-        }
-        h1 {
-            font-family: 'Bodoni MT';"
-            font-size: 120px;
-            color: rgb(0, 0, 0); 
-        }
+{% extends "base.html" %}
 
-        
-    </style>
+{% block content %}
+
+    <div class="titre-container">
+        <center><h1>Contactez-nous</h1></center>
+        <center><p class="slogan">Les conseillers clientèle de Impérial Joaillerie sont à votre service pour répondre à toutes vos demandes, 
+            que ce soit pour vous aider avec vos commandes, vous conseiller sur des créations ou vous suggérer des idées de cadeaux.</p></center>
+    </div>
+
+    <div class="contenu-histoire">
+        <p>
+            <strong>Nous appeler:</strong> Nos conseillers clientèle sont à votre disposition pour répondre à toutes vos demandes, du lundi au vendredi de 9h à 19h et le samedi de 9h à 17h.
+        </p>
+        <p>
+            <u>Numéro de téléphone:</u> +33 648521675
+        </p>
+        <p>
+          <strong>Nous écrire:</strong> Nous vous invitons à nous écrire pour nous poser vos questions. Les conseillers clientèle de Impérial Joaillerie sont à votre service pour répondre à votre demande.  
+        </p>
+         <p>
+           <u>Adresse mail:</u> Impérial.Joaillerie@gmail.com
+        </p>
+    </div>
+</body>
+</html>
+{% endblock %}
