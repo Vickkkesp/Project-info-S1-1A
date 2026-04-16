@@ -51,7 +51,7 @@ def page_connection():
             session["admin"] = True
             return redirect("/admin")
         else:
-             message = "Identifiants incorrects."
+            message = "Identifiants incorrects."
 
     return render_template("Connection.html", message = message) #page une fois connecté
 
@@ -369,7 +369,6 @@ def supprimer_panier(id_produit):
     return redirect("/panier")
 
 @app.route("/vider_panier", methods=["POST"])
-def vider_panier():
     session["panier"] = []
     return redirect("/panier")
 

@@ -1,53 +1,51 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <title>Admin</title>
-    <style>
-        body { font-family: 'Bodoni MT'; }
-        .btn-container { text-align: center; margin: 20px 0; }
-        .btn-generer { 
-            background-color: rgba(226, 201, 13, 0.507); 
-            color: rgb(0, 0, 0); 
-            padding: 12px 24px; 
-            text-decoration: none; 
-            border-radius: 4px; 
-            font-weight: bold;
-            display: inline-block;
-        }
-        .btn-generer:hover { background-color: rgba(217, 211, 163, 0.382); }
-        img { margin: 20px 0; }
-    </style>
-</head>
-<body>
-    <center>
-        <h1>Tableau de bord administratif</h1>
-        
-        <div class="btn-container">
-            <a href="/generer_graphes" class="btn-generer">Générer de nouveaux graphes</a>
-        </div>
+{% extends "base.html" %}
 
-        <h2>Graphique utilisateurs</h2>
-        <img src="{{ url_for('static', filename='graphs/graph_utilisateurs.png') }}?v={{ range(1000000)|random }}" alt="Graphique utilisateurs" width="800" height="800">
+{% set titre = "Admin" %}
 
-        <h2>Graphique distribution produits</h2>
-        <img src="{{ url_for('static', filename='graphs/graph_distribution_produits.png') }}?v={{ range(1000000)|random }}" alt="Graphique distribution produits" width="800" height="800">
+{% block content %}
+<style>
+    body { font-family: 'Bodoni MT'; }
+    .btn-container { text-align: center; margin: 20px 0; }
+    .btn-generer { 
+        background-color: rgba(226, 201, 13, 0.507); 
+        color: rgb(0, 0, 0); 
+        padding: 12px 24px; 
+        text-decoration: none; 
+        border-radius: 4px; 
+        font-weight: bold;
+        display: inline-block;
+    }
+    .btn-generer:hover { background-color: rgba(217, 211, 163, 0.382); }
+    img { margin: 20px 0; }
+</style>
+<center>
+    <h1>Tableau de bord administratif</h1>
+    
+    <div class="btn-container">
+        <a href="/generer_graphes" class="btn-generer">Générer de nouveaux graphes</a>
+    </div>
 
-        <h2>Graphique Chiffre d'affaires</h2>
-        <img src="{{ url_for('static', filename='graphs/graph_chiffre_affaire.png') }}?v={{ range(1000000)|random }}" alt="Graphique chiffre d'affaire" width="800" height="800">   
+    <h2>Graphique utilisateurs</h2>
+    <img src="{{ url_for('static', filename='graphs/graph_utilisateurs.png') }}?v={{ range(1000000)|random }}" alt="Graphique utilisateurs" width="800" height="800">
 
-        <h2>Graphique ventes par mois</h2>
-        <img src="{{ url_for('static', filename='graphs/graph_ventes_par_mois.png') }}?v={{ range(1000000)|random }}" alt="Graphique ventes par mois" width="800" height="800">
+    <h2>Graphique distribution produits</h2>
+    <img src="{{ url_for('static', filename='graphs/graph_distribution_produits.png') }}?v={{ range(1000000)|random }}" alt="Graphique distribution produits" width="800" height="800">
 
-        <h1>Fin données administratives</h1>
-        <h2><a href="/Ajout_produit">Pour ajouter un bijoux</a></h2>
-    </center>   
+    <h2>Graphique Chiffre d'affaires</h2>
+    <img src="{{ url_for('static', filename='graphs/graph_chiffre_affaire.png') }}?v={{ range(1000000)|random }}" alt="Graphique chiffre d'affaire" width="800" height="800">   
 
-    <footer>
-        <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
-        <p>Expertise . Élégance . Tradition</p>
-        <div style="margin-top: 50px; padding-bottom: 30px;">
-            <img src="{{ url_for('static', filename='images/logolivraison.png') }}" width="600">
-        </div>
-    </footer>
-</body>
-</html>
+    <h2>Graphique ventes par mois</h2>
+    <img src="{{ url_for('static', filename='graphs/graph_ventes_par_mois.png') }}?v={{ range(1000000)|random }}" alt="Graphique ventes par mois" width="800" height="800">
+
+    <h1>Fin données administratives</h1>
+    <h2><a href="/Ajout_produit">Pour ajouter un bijoux</a></h2>
+</center>
+{% endblock %}
+
+{% block footer %}
+<p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
+<p>Expertise . Élégance . Tradition</p>
+<div style="margin-top: 50px; padding-bottom: 30px;">
+    <img src="{{ url_for('static', filename='images/logolivraison.png') }}" width="600">
+</div>
+{% endblock %}
