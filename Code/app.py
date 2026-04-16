@@ -284,5 +284,6 @@ def generer_graphes():
     
     return render_template("generer_graphes.html", message=message)
 
+
 if __name__ == '__main__':
  app.run(debug=True)
