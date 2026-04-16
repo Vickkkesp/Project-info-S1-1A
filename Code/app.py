@@ -48,11 +48,11 @@ def page_connection():
         password = request.form["password"]
 
         # Vérification des identifiants (exemple simplifié)
-    elif email == "nathan.assens@gmail.com" and password == "kk":
-        session["admin"] = True
-        return redirect("/admin")
-    else:
-        message = "Identifiants incorrects."
+        if email == "nathan.assens@gmail.com" and password == "kk":
+            session["admin"] = True
+            return redirect("/admin")
+        else:
+            message = "Identifiants incorrects."
 
     return render_template("Connection.html", message = message) #page une fois connecté
 
