@@ -1,10 +1,12 @@
 from email import message
 from flask import Flask, render_template, request, redirect, session
-from hashlib import sha512
 import sqlite3
-from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois # import de la fonction pour faire les graphes
+from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
+
+# Initialiser la base de données au démarrage
+init_db()
 
 @app.route("/")
 def page_html():
@@ -20,10 +22,20 @@ def admin():
     if "admin" not in session:
         return redirect("/page0") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
     
-    graphique_utilisateurs() #appel de la fonction pour faire le graphe du nombre d'utilisateurs inscrits par mois
-    chiffreAffaire() #appel de la fonction pour faire le graphe du chiffre d'affaire par mois
-    distribution_produits() #appel de la fonction pour faire le graphe de la distribution des produits
-    ventes_par_mois() #appel de la fonction pour faire le graphe du nombre de ventes par mois
+    import os
+    graphs_dir = os.path.join(app.static_folder, 'graphs')
+    os.makedirs(graphs_dir, exist_ok=True)  # S'assurer que le répertoire existe
+    
+    # Générer les graphes seulement s'ils n'existent pas déjà
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_utilisateurs.png')):
+        graphique_utilisateurs()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_chiffre_affaire.png')):
+        chiffreAffaire()  # Utilise la date actuelle par défaut
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_distribution_produits.png')):
+        distribution_produits()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_ventes_par_mois.png')):
+        ventes_par_mois()
+    
     return render_template("Admin.html") #page admin pour afficher les graphes
 
 
@@ -42,7 +54,7 @@ def page_connection():
         else:
             message = "Identifiants incorrects."
 
-    return render_template("Connection.html", message=message) #page une fois connecté
+    return render_template("Connection.html", message = message) #page une fois connecté
 
 @app.route("/page02")
 def page02_html():
@@ -190,8 +202,6 @@ def ajouter_utilisateur():
     email = request.form["email"] #recuperation de l'email du formulaire
     password = request.form["password"] #recuperation du mdp du formulaire
     telephone = request.form["telephone"]
-    password = password.encode()
-    password = sha512(password).hexdigest()
     
     try :
         cursor.execute("INSERT INTO utilisateurs (nom,prenom,email,password,telephone) VALUES (?,?,?,?,?)", (nom,prenom,email,password,telephone)) #on essaye de rentrer une nouvelle ligne dans la BDD pour le nouvel utilisateur
@@ -204,6 +214,15 @@ def ajouter_utilisateur():
     conn.close()
 
     return "Utilisateur ajouté !"
+    
+@app.route("/dashboard")
+def dashboard(): #si les identifiants sont corrects on affiche cette page
+
+    if "user" in session:
+        return "Bienvenue " + session["user"]
+    else:
+        return redirect("/connection.html")
+    
 
 #fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
@@ -218,35 +237,21 @@ def login():
         "SELECT * FROM utilisateurs WHERE email=? AND password=?",
         (email, password)
     )
-    password = password.encode()
-    password = sha512(password).hexdigest()
     user = cursor.fetchone()
     conn.close()
-    emailR = request.form["email"]
-    passwordR = request.form["password"]
-    passwordR = passwordR.encode()
-    passwordR = sha512(passwordR).hexdigest()
-    mdp_Admin = 'kk'.encode()
 
-        # Vérification des identifiants (exemple simplifié)
-    if email == "nathan.assens@gmail.com" and password == sha512(mdp_Admin).hexdigest():
+    # Vérification des identifiants admin
+    if email == "nathan.assens@gmail.com" and password == "kk":
         session["admin"] = True
-        return render_template("Admin.html")
-        
-    elif password == passwordR and email == emailR:
+        return redirect("/admin")
+
+    # Vérification des identifiants utilisateur normal
+    elif user:
         session["user"] = email
         return redirect("/dashboard")
     else:
         return "Identifiants incorrects"
     
-
-@app.route("/dashboard")
-def dashboard(): #si les identifiants sont corrects on affiche cette page
-
-    if "user" in session:
-        return "Bienvenue " + session["user"]
-    else:
-        return redirect("/connection.html")
 
 # Route pour générer les graphes
 @app.route("/generer_graphes", methods=["GET", "POST"])
