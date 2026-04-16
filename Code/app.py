@@ -1,7 +1,6 @@
-from email import message
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
+from stats_BD import get_db, graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -48,11 +47,11 @@ def page_connection():
         password = request.form["password"]
 
         # Vérification des identifiants (exemple simplifié)
-    elif email == "nathan.assens@gmail.com" and password == "kk":
-        session["admin"] = True
-        return redirect("/admin")
-    else:
-        message = "Identifiants incorrects."
+        if email == "nathan.assens@gmail.com" and password == "kk":
+            session["admin"] = True
+            return redirect("/admin")
+        else:
+             message = "Identifiants incorrects."
 
     return render_template("Connection.html", message = message) #page une fois connecté
 
@@ -303,17 +302,81 @@ def generer_graphes():
     return render_template("generer_graphes.html", message=message)
 
 
-from flask import Flask, render_template
-
 @app.route('/bagues')
 def bagues():
     # Simulation de base de données
+    
     liste_bagues = [
         {"nom": "Bague Éternité", "prix": 1250, "image": "bague1.jpg"},
         {"nom": "Solitaire Royal", "prix": 3400, "image": "bague2.jpg"},
         {"nom": "Anneau Bordeaux Gold", "prix": 890, "image": "bague3.jpg"},
     ]
     return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
+
+
+@app.route("/ajouter_panier/<int:id_produit>", methods=["POST"])
+def ajouter_panier(id_produit):
+    db = get_db()
+    produit = db.execute(
+        "SELECT id_produit, prix, nom_bijoux FROM produits WHERE id_produit = ?",
+        (id_produit,)
+    ).fetchone()
+    db.close()
+
+    if produit is None:
+        return redirect("/Liste_produits")  # Rediriger si le produit n'existe pas
+
+    if "panier" not in session:
+        session["panier"] = []
+
+    panier = session["panier"]
+    trouve = False
+
+    for article in panier:
+        if article["id_produit"] == produit["id_produit"]:
+            article["quantite"] += 1
+            trouve = True
+            break
+
+    if not trouve:
+        panier.append({
+            "id_produit": produit["id_produit"],
+            "nom_bijoux": produit["nom_bijoux"],
+            "prix": produit["prix"],
+            "quantite": 1
+        })
+
+    session["panier"] = panier
+    return redirect("/Liste_produits")
+
+@app.route("/panier")
+def panier():
+    panier = session.get("panier", [])
+
+    total = 0
+    for article in panier:
+        total += article["prix"] * article["quantite"]
+
+    return render_template("panier.html", panier=panier, total=total)
+
+@app.route("/supprimer_panier/<int:id_produit>", methods=["POST"])
+def supprimer_panier(id_produit):
+    panier = session.get("panier", [])
+
+    panier = [article for article in panier if article["id_produit"] != id_produit]
+
+    session["panier"] = panier
+    return redirect("/panier")
+
+@app.route("/vider_panier", methods=["POST"])
+def vider_panier():
+    session["panier"] = []
+    return redirect("/panier")
+
+
+
+
+
 
 if __name__ == '__main__':
  app.run(debug=True)
