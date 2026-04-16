@@ -157,7 +157,7 @@ def page18_html():
 
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
-    conn = sqlite3.connect("ProjetBdd.db")
+    conn = sqlite3.connect("ProjetBdd1.db")
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM produits")
@@ -187,7 +187,7 @@ def ajouter_produit():
   nom_bijoux = request.form["Nom_Bijoux"]
   matiere = request.form["Matiere"]
 
-  conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+  conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
   cursor = conn.cursor()
   
   type_bijoux = cursor.execute("SELECT * FROM  type WHERE type = ?", (type,))
@@ -207,7 +207,7 @@ def ajouter_produit():
 @app.route("/ajouter_utilisateur", methods=["POST"]) #fonction pour ajouter des utilisateurs à la BDD depuis le formulaire de la page creation_compte
 def ajouter_utilisateur():
     error = None
-    conn = sqlite3.connect("ProjetBdd.db") # connexion à la BDD
+    conn = sqlite3.connect("ProjetBdd1.db") # connexion à la BDD
     cursor = conn.cursor()
 
     prenom = request.form["prenom"]
@@ -221,21 +221,12 @@ def ajouter_utilisateur():
     except sqlite3.IntegrityError: #si le nom utilisateur ou l'email est en double
       error = "nom d'utilisateur ou email déjà utilisé" #on crée une variable qui contient le message d'erreur
       conn.close() #on coupe la connection
-      return render_template("/creation_compte.html", error = error) #envoie le message d'erreur vers la page HTML
+      return render_template("/creation_compte.html", message = error) #envoie le message d'erreur vers la page HTML
     
     conn.commit()
     conn.close()
 
-    return "Utilisateur ajouté !"
-    
-@app.route("/dashboard")
-def dashboard(): #si les identifiants sont corrects on affiche cette page
-
-    if "user" in session:
-        return "Bienvenue " + session["user"]
-    else:
-        return redirect("/connection.html")
-    
+    return "Utilisateur ajouté !"       
 
 #fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
@@ -243,7 +234,7 @@ def login():
     email = request.form["email"]
     password = request.form["password"]
 
-    conn = sqlite3.connect("ProjetBdd.db")
+    conn = sqlite3.connect("ProjetBdd1.db")
     cursor = conn.cursor()
 
     cursor.execute(
@@ -259,12 +250,11 @@ def login():
         return redirect("/admin")
 
     # Vérification des identifiants utilisateur normal
-    elif user:
-        session["user"] = email
-        return redirect("/dashboard")
-    else:
-        return "Identifiants incorrects"
-    
+    elif user == None:
+        return "Identifiants incorects"
+    else:  
+        prenom = user[2]
+        return render_template("/connecté.html",message = prenom)
 
 # Route pour générer les graphes
 @app.route("/generer_graphes", methods=["GET", "POST"])
