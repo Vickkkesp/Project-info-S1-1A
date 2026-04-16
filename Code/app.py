@@ -2,8 +2,12 @@ from email import message
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
+from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
+
+# Initialiser la base de données au démarrage
+init_db()
 
 # Initialiser la base de données au démarrage
 init_db()
@@ -21,6 +25,20 @@ def deconnexion():
 def admin():
     if "admin" not in session:
         return redirect("/page0") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
+    
+    import os
+    graphs_dir = os.path.join(app.static_folder, 'graphs')
+    os.makedirs(graphs_dir, exist_ok=True)  # S'assurer que le répertoire existe
+    
+    # Générer les graphes seulement s'ils n'existent pas déjà
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_utilisateurs.png')):
+        graphique_utilisateurs()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_chiffre_affaire.png')):
+        chiffreAffaire()  # Utilise la date actuelle par défaut
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_distribution_produits.png')):
+        distribution_produits()
+    if not os.path.exists(os.path.join(graphs_dir, 'graph_ventes_par_mois.png')):
+        ventes_par_mois()
     
     import os
     graphs_dir = os.path.join(app.static_folder, 'graphs')
@@ -54,6 +72,7 @@ def page_connection():
         else:
             message = "Identifiants incorrects."
 
+    return render_template("Connection.html", message = message) #page une fois connecté
     return render_template("Connection.html", message = message) #page une fois connecté
 
 @app.route("/page02")
@@ -94,6 +113,12 @@ def page5_html():
         {"nom": "Chevalière Or", "prix": 950, "image": "bague3.jpg"}
     ]
     return render_template("Bagues.html", titre="Collection Bagues", produits=liste_bagues) #page pour les bagues
+    liste_bagues = [
+        {"nom": "Alliance Éclat", "prix": 1200, "image": "bague1.jpg"},
+        {"nom": "Solitaire Impérial", "prix": 2500, "image": "bague2.jpg"},
+        {"nom": "Chevalière Or", "prix": 950, "image": "bague3.jpg"}
+    ]
+    return render_template("Bagues.html", titre="Collection Bagues", produits=liste_bagues) #page pour les bagues
 
 @app.route("/page6")
 def page6_html():
@@ -106,9 +131,19 @@ def page7_html():
         {"nom": "Sautoir Perles", "prix": 3200, "image": "collier2.jpg"}
  ]
  return render_template("collier.html", titre="Collection Colliers", produits=liste_colliers) #page pour les colliers
+ liste_colliers = [
+        {"nom": "Rivière d'Argent", "prix": 1800, "image": "collier1.jpg"},
+        {"nom": "Sautoir Perles", "prix": 3200, "image": "collier2.jpg"}
+ ]
+ return render_template("collier.html", titre="Collection Colliers", produits=liste_colliers) #page pour les colliers
 
 @app.route("/page8")
 def page8_html():
+ liste_montres = [
+        {"nom": "Chronographe Bordeaux", "prix": 4500, "image": "montre1.jpg"},
+        {"nom": "L'Automatique Or", "prix": 7800, "image": "montre2.jpg"}
+    ]
+ return render_template("montres.html", titre="Collection Montres", produits=liste_montres) #page pour les montres
  liste_montres = [
         {"nom": "Chronographe Bordeaux", "prix": 4500, "image": "montre1.jpg"},
         {"nom": "L'Automatique Or", "prix": 7800, "image": "montre2.jpg"}
@@ -246,6 +281,8 @@ def login():
 
     # Vérification des identifiants admin
     if email == "nathan.assens@gmail.com" and password == "kk":
+    # Vérification des identifiants admin
+    if email == "nathan.assens@gmail.com" and password == "kk":
         session["admin"] = True
         return redirect("/admin")
 
@@ -305,5 +342,19 @@ def bagues():
     ]
     return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
 
+
+from flask import Flask, render_template
+
+@app.route('/bagues')
+def bagues():
+    # Simulation de base de données
+    liste_bagues = [
+        {"nom": "Bague Éternité", "prix": 1250, "image": "bague1.jpg"},
+        {"nom": "Solitaire Royal", "prix": 3400, "image": "bague2.jpg"},
+        {"nom": "Anneau Bordeaux Gold", "prix": 890, "image": "bague3.jpg"},
+    ]
+    return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
+
 if __name__ == '__main__':
  app.run(debug=True)
+
