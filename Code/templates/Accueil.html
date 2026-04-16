@@ -17,7 +17,12 @@
 
 </head>
 <body>
-    <a href="/page0" class="login-link">Connexion</a>
+    {%if connect %}
+        <a>Bonjour {{prenom}}<a><br>
+        <a href="/deconnexion" class ="login-link">Se déconnecter</a>
+    {%else%}
+        <a href="/page0" class="login-link">Connexion</a>
+    {% endif %}
 
  <center> <h1 class="titre">Impérial joaillerie</h1 </center> 
  <center> <p class="slogan">L'élégance commence par un bijou qui vous ressemble.</p>
