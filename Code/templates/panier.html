@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Panier</title>
+</head>
+<body>
+
+<h1>Mon panier</h1>
+<a href="/Liste_produits">Retour aux produits</a>
+
+<p>Nombre d'articles : {{ nb_articles }}</p>
+
+<hr>
+
+{% if lignes %}
+    {% for ligne in lignes %}
+        <div>
+            <h3>{{ ligne["nom"] }}</h3>
+            <p>Prix unitaire : {{ ligne["prix"] }} €</p>
+            <p>Stock disponible : {{ ligne["stock"] }}</p>
+            <p>Quantité : {{ ligne["quantite"] }}</p>
+            <p>Sous-total : {{ ligne["sous_total"] }} €</p>
+
+            <form action="/panier/augmenter/<int:id_ligne>" method="POST" style="display:inline;">
+                <button type="submit">+</button>
+            </form>
+
+            <form action="/panier/diminuer/<int:id_ligne>" method="POST" style="display:inline;">
+                <button type="submit">-</button>
+            </form>
+
+            <form action="/panier/supprimer/<int:id_ligne>" method="POST" style="display:inline;">
+                <button type="submit">Supprimer</button>
+            </form>
+        </div>
+        <hr>
+    {% endfor %}
+
+    <h2>Total : {{ total }} €</h2>
+
+    <form action="/panier/vider" method="POST">
+        <button type="submit">Vider le panier</button>
+    </form>
+
+    <br>
+
+    <form action="/panier/valider" method="POST">
+        <button type="submit">Valider la commande</button>
+    </form>
+
+{% else %}
+    <p>Le panier est vide.</p>
+{% endif %}
+
+</body>
+</html>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <p>&copy; 2023 Ma Boutique. Tous droits réservés.</p>
+    </footer>
+{% endblock %}

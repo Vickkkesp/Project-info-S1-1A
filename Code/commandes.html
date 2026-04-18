@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes commandes</title>
+</head>
+<body>
+
+<h1>Historique des commandes</h1>
+
+{% if commandes %}
+    {% for commande in commandes %}
+        <div>
+            <p>Commande n° {{ commande["id_commande"] }}</p>
+            <p>Date : {{ commande["date_commande"] }}</p>
+            <p>Total : {{ commande["total"] }} €</p>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>Aucune commande.</p>
+{% endif %}
+
+</body>
+</html>
