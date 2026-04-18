@@ -323,3 +323,361 @@ footer p {
     font-size: 0.9rem;
     color: #666;
 }
+
+/* logout.css */
+
+.logout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* S'adapte à la hauteur de votre base.html */
+    padding: 40px 20px;
+}
+
+.luxury-card {
+    background-color: #ffffff;
+    max-width: 550px;
+    width: 100%;
+    padding: 60px 40px;
+    text-align: center;
+    border: 1px solid #b5935b; /* Or mat */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.ornament {
+    color: #b5935b;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.luxury-card h1 {
+    font-family: 'Cinzel', serif;
+    color: #630d16; /* Bordeaux */
+    font-size: 1.8rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.elegant-line {
+    width: 60px;
+    height: 1px;
+    background-color: #b5935b;
+    margin: 25px auto;
+}
+
+.subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: #b5935b;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.farewell-message {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.btn-luxe {
+    display: inline-block;
+    margin-top: 35px;
+    padding: 15px 40px;
+    background-color: #630d16; /* Bordeaux */
+    color: #f4efea; /* Beige soie */
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid #630d16;
+    transition: all 0.4s ease-in-out;
+}
+
+.btn-luxe:hover {
+    background-color: #ffffff;
+    color: #630d16;
+    border-color: #630d16;
+}
+
+
+
+
+
+/* --- Styles pour la page d'inscription --- */
+
+.page-wrapper {
+    padding: 60px 20px;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Playfair Display', serif;
+}
+
+.luxury-card {
+    max-width: 500px;
+    width: 100%;
+    background: #ffffff;
+    padding: 40px;
+    border: 1px solid #b5935b; /* Bordure Or mat */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.luxury-card h1 {
+    font-family: 'Cinzel', serif;
+    color: #630d16; /* Bordeaux */
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+.ornament {
+    color: #b5935b;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: #630d16;
+    background: #fdf2f2;
+    padding: 10px;
+    border-radius: 2px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* Style des champs de saisie */
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #b5935b;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-bottom: 1px solid #b5935b;
+    background: #fafafa;
+    outline: none;
+    box-sizing: border-box; /* Important pour que la largeur soit correcte */
+    transition: background 0.3s;
+}
+
+.form-group input:focus {
+    background: #ffffff;
+    border-color: #630d16;
+}
+
+/* Style du bouton */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background-color: #630d16;
+    color: white;
+    border: none;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #4a0910;
+    box-shadow: 0 5px 15px rgba(99, 13, 22, 0.2);
+}
+
+/* Liens en bas */
+.form-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f4f4f4;
+}
+
+.link-login {
+    display: block;
+    color: #630d16;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.link-home {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.link-home:hover {
+    color: #630d16;
+}
+
+/* --- Page Ajout Produit Admin --- */
+
+.admin-wrapper {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.admin-card {
+    max-width: 650px;
+    width: 100%;
+    background: #ffffff;
+    padding: 50px;
+    border: 1px solid #b5935b;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.admin-header h1 {
+    font-family: 'Cinzel', serif;
+    color: #630d16;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+.subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Alignement côte à côte pour les sélecteurs */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.luxury-form .form-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.luxury-form label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: #b5935b;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.luxury-form input, 
+.luxury-form select {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0; /* Garder des angles droits pour le luxe */
+    background: #fdfdfd;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.luxury-form input:focus, 
+.luxury-form select:focus {
+    border-color: #630d16;
+}
+
+.btn-admin {
+    width: 100%;
+    padding: 18px;
+    background-color: #630d16;
+    color: white;
+    border: none;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.4s;
+    margin-top: 10px;
+}
+
+.btn-admin:hover {
+    background-color: #4a0910;
+}
+
+/* Navigation bas de page */
+.admin-nav {
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.admin-nav a {
+    text-decoration: none;
+    color: #b5935b;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.admin-nav a:hover {
+    color: #630d16;
+}
+
+.sep {
+    margin: 0 10px;
+    color: #ddd;
+}
+
+/* Footer spécifique */
+.footer-admin {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    color: #333;
+}
+
+.footer-logo img {
+    max-width: 300px; /* Réduit un peu la taille pour que ce soit plus élégant */
+    height: auto;
+    opacity: 0.8;
+}
+
+.error-box {
+    background-color: #fff5f5;
+    color: #c0392b;
+    padding: 15px;
+    border-left: 4px solid #c0392b;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}

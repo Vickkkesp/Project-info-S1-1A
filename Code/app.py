@@ -84,7 +84,8 @@ def page01_html():
 
 @app.route("/page03")
 def page03_html():
- return render_template("déconnection.html")
+    session.clear()
+    return render_template("déconnection.html")
 
 @app.route("/page1")
 def page1_html():
@@ -147,29 +148,6 @@ def page11_html():
 def page12_html():
  return render_template("contact.html") #page pour nos contacts
 
-@app.route("/page13")
-def page13_html():
- return render_template("collier-or.html") #page pour les colliers en or
-
-@app.route("/page14")
-def page14_html():
- return render_template("collier-argent.html") #page pour les colliers en argent
-
-@app.route("/page15")
-def page15_html():
- return render_template("bague-or.html") #page pour les bagues en or
-
-@app.route("/page16")
-def page16_html():
- return render_template("bagues-argent.html") #page pour les bagues en argent
-
-@app.route("/page17")
-def page17_html():
- return render_template("boucle-or.html") #page pour les boucle en or
-
-@app.route("/page18")
-def page18_html():
- return render_template("boucle-argent.html") #page pour les bagues en argent
 
 @app.route("/Liste_produits") #page pour afficher la liste de tous les bijoux 
 def index():
@@ -245,12 +223,13 @@ def ajouter_utilisateur():
     return "Utilisateur ajouté !"
     
 @app.route("/dashboard")
-def dashboard(): #si les identifiants sont corrects on affiche cette page
-
+def dashboard():
     if "user" in session:
-        return "Bienvenue " + session["user"]
+        # On passe le nom de l'utilisateur au template grâce à 'nom_client'
+        return render_template("dashboard.html", nom_client=session["user"])
     else:
-        return redirect("/page0")
+        # Si pas connecté, retour à la page de connexion (page02)
+        return redirect(url_for('login'))
     
 
 #fonction pour la connection depuis la page autentification
@@ -609,7 +588,13 @@ def afficher_commandes():
     db.close()
     return render_template("commandes.html", commandes=commandes)
 
-
+@app.route('/page03')
+def logout():
+    # On supprime l'utilisateur de la session
+    session.pop('user', None)
+    session.pop('id_utilisateur', None)
+    # On affiche la page de confirmation de déconnexion
+    return render_template('déconnection.html')
 
 if __name__ == '__main__':
  app.run(debug=True)
