@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="logout-wrapper"> <div class="luxury-card">
+        <h1>Commande Confirmée</h1>
+        <div class="elegant-line"></div>
+        
+        <p class="subtitle">Référence : #LUXE-{{ id_commande }}</p>
+        
+        <p class="farewell-message">
+            Merci pour votre confiance. Votre commande a été enregistrée avec succès par nos joailliers.
+        </p>
+
+        <div class="delivery-box" style="margin-top: 30px; border: 1px solid #b5935b; padding: 20px;">
+            <p style="font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 2px;">Date d'arrivée estimée</p>
+            <p style="font-size: 1.5rem; color: #630d16; font-weight: bold;">{{ date_livraison }}</p>
+            <p style="font-size: 0.8rem; color: #888;">(Livraison sécurisée J+5)</p>
+        </div>
+
+        <a href="/dashboard" class="btn-luxe">Suivre mes commandes</a>
+    </div>
+</div>
+{% endblock %}

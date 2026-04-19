@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="titre_page_produits">Voici nos {{ titre }} proposés à la vente</h1>
+    <div class="barre-filtres">
+        <form method="GET">
+            <label for="genre">Genre :</label>
+            <select name="genre" id="genre">
+                <option value="Tous" {% if genre_actuel == 'Tous' %}selected{% endif %}>Tous</option>
+                <option value="Homme" {% if genre_actuel == 'Homme' %}selected{% endif %}>Homme</option>
+                <option value="Femme" {% if genre_actuel == 'Femme' %}selected{% endif %}>Femme</option>
+                <option value="Mixte" {% if genre_actuel == 'Mixte' %}selected{% endif %}>Mixte</option>
+            </select>
+
+            <label for="tri">Trier par :</label>
+            <select name="tri" id="tri">
+                <option value="" {% if tri_actuel == '' %}selected{% endif %}>Pertinence</option>
+                <option value="asc" {% if tri_actuel == 'asc' %}selected{% endif %}>Prix : croissant</option>
+                <option value="desc" {% if tri_actuel == 'desc' %}selected{% endif %}>Prix : décroissant</option>
+            </select>
+            <label>
+                <input type="checkbox" name="en_stock" {% if en_stock %}checked{% endif %}>
+                En stock uniquement
+            </label>
+
+            <label for="budget_max">Budget Max (€) :</label>
+            <input type="number" name="budget_max" id="budget_max" value="{{ budget_max }}" placeholder="Ex: 150">
+
+            <button type="submit">Appliquer les filtres</button>
+        </form>
+    </div>
+
+    <div class="grille-produits">
+        {% for produit in produits %}
+            <div class="carte-produit">
+                <img src="{{ url_for('static', filename='Images/produits/' ~ produit.id_produit ~ '.jpg') }}" alt="{{ produit.nom_bijoux }}">
+                <h3>{{ produit.nom_bijoux }}</h3>
+                <p class="prix">{{ produit.prix }} €</p> 
+                
+                <form action="/panier/ajouter/{{ produit.id_produit }}" method="POST">
+                    <button type="submit">Ajouter au panier</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

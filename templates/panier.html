@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="panier-container">
+    <h1 class="titre-panier">Votre Sélection</h1>
+
+    {% if lignes %}
+    <div class="panier-grid">
+        <div class="panier-items">
+            {% for ligne in lignes %}
+            <div class="panier-item">
+                <div class="item-image">
+                    <img src="{{ url_for('static', filename='Images/' ~ ligne.id_produit ~ '.png') }}" alt="{{ ligne.nom }}">
+                </div>
+                <div class="item-details">
+                    <h3>{{ ligne.nom }}</h3>
+                    <p class="item-prix-unit">{{ ligne.prix }} € l'unité</p>
+                    <div class="quantite-controls">
+                        <form action="/panier/diminuer/{{ ligne.id_ligne_panier }}" method="POST">
+                            <button type="submit">-</button>
+                        </form>
+                        <span>{{ ligne.quantite }}</span>
+                        <form action="/panier/augmenter/{{ ligne.id_ligne_panier }}" method="POST">
+                            <button type="submit">+</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <p class="sous-total">{{ ligne.sous_total }} €</p>
+                    <form action="/panier/supprimer/{{ ligne.id_ligne_panier }}" method="POST">
+                        <button type="submit" class="btn-supprimer">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="panier-summary">
+            <h2>Résumé</h2>
+            <div class="summary-line">
+                <span>Articles :</span>
+                <span>{{ nb_articles }}</span>
+            </div>
+            <div class="summary-line total">
+                <span>Total :</span>
+                <span>{{ total }} €</span>
+            </div>
+            
+            <form action="/panier/valider" method="POST">
+                <button type="submit" class="btn-valider">Valider la Commande</button>
+            </form>
+            
+            <form action="/panier/vider" method="POST">
+                <button type="submit" class="btn-vider">Vider le panier</button>
+            </form>
+            
+            <a href="/" class="link-continuer">Continuer mes achats</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="panier-vide">
+        <p>Votre panier est actuellement vide.</p>
+        <a href="/" class="btn-luxe">Découvrir nos bijoux</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
