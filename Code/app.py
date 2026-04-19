@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 from stats_BD import get_db, graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
@@ -19,7 +19,7 @@ def deconnexion():
 @app.route("/admin")
 def admin():
     if "admin" not in session:
-        return redirect("/page0") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
+        return redirect("/connection") #si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion pour proteger
     
     import os
     graphs_dir = os.path.join(app.static_folder, 'graphs')
@@ -38,7 +38,7 @@ def admin():
     return render_template("Admin.html") #page admin pour afficher les graphes
 
 
-@app.route("/page0",methods=["GET","POST"])
+@app.route("/connection",methods=["GET","POST"])
 def page_connection():
     message = ""  # Initialize message to avoid UnboundLocalError
     username = session.get("user", None)  # Récupérer l'utilisateur de la session s'il existe
@@ -72,18 +72,18 @@ def page_connection():
 
     return render_template("Connection.html", message=message, username=username) #page une fois connecté
 
-@app.route("/page02")
-def page02_html():
+@app.route("/autentification")
+def page_autentification():
     message = ""  # Initialize message to avoid UnboundLocalError
     
     return render_template("autentification.html",message = message) #page de connexion 
 
-@app.route("/page01")
-def page01_html():
+@app.route("/creation_compte")
+def creation_compte_html():
  return render_template("creation_compte.html") #page pour créer un compte
 
-@app.route("/page03")
-def page03_html():
+@app.route("/déconnection")
+def déconnection_html():
     session.clear()
     return render_template("déconnection.html")
 
@@ -103,41 +103,74 @@ def page3_html():
 def page4_html():
  return render_template("Promotions.html") #page pour les promos
 
-@app.route("/page5")
-def page5_html():
+@app.route("/Bagues")
+def Bagues_html():
     conn = get_db()
-    conn.row_factory = None  # Désactiver sqlite3.Row pour récupérer des tuples
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Bague'")
+    cursor.execute("""
+        SELECT id_produit,
+               nom_bijoux,
+               prix,
+               photos,
+               stock,
+               description
+        FROM produits
+        WHERE idtype = 3
+    """)
     produits = cursor.fetchall()
     conn.close()
     return render_template("Bagues.html", titre="Collection Bagues", produits=produits) #page pour les bagues
 
-@app.route("/page6")
-def page6_html():
+@app.route("/Boucles")
+def Boucles_html():
     conn = get_db()
-    conn.row_factory = None  # Désactiver sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Boucles'")
+    cursor.execute("""
+        SELECT id_produit,
+               nom_bijoux,
+               prix,
+               photos,
+               stock,
+               description
+        FROM produits
+        WHERE idtype = 2
+    """)
     produits = cursor.fetchall()
     conn.close()
     return render_template("boucles.html", produits=produits) #page pour les boucles d oreiles
 
-@app.route("/page7")
-def page7_html():
+@app.route("/Colliers")
+def Colliers_html():
     conn = get_db()
-    conn.row_factory = None  # Désactiver sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Collier'")
+    cursor.execute("""
+        SELECT id_produit,
+               nom_bijoux,
+               prix,
+               photos,
+               stock,
+               description
+        FROM produits
+        WHERE idtype = 1
+    """)
     produits = cursor.fetchall()
     conn.close()
     return render_template("collier.html", titre="Collection Colliers", produits=produits) #page pour les colliers
 
-@app.route("/page8")
-def page8_html():
+@app.route("/Montres")
+def Montres_html():
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Montre'")
+    cursor.execute("""
+        SELECT id_produit,
+               nom_bijoux,
+               prix,
+               photos,
+               stock,
+               description
+        FROM produits
+        WHERE idtype = 4
+    """)
     produits = cursor.fetchall()
     conn.close()
     return render_template("montres.html", titre="Collection Montres", produits=produits) #page pour les montres
@@ -276,7 +309,7 @@ def login():
 @app.route("/generer_graphes", methods=["GET", "POST"])
 def generer_graphes():
     if "admin" not in session:
-        return redirect("/page0")  # Protéger la page - seulement l'admin peut la voir
+        return redirect("/connection")  # Protéger la page - seulement l'admin peut la voir
     
     if request.method == "POST":
         type_graphe = request.form.get("type_graphe")
@@ -324,7 +357,7 @@ def bagues():
 @app.route("/panier")
 def afficher_panier():
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/connection")
 
     id_utilisateur = session["id_utilisateur"]
     id_panier = get_or_create_panier(id_utilisateur)
@@ -355,7 +388,7 @@ def afficher_panier():
 @app.route("/panier/vider", methods=["POST"])
 def vider_panier():
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/connection")
 
     id_utilisateur = session["id_utilisateur"]
     id_panier = get_or_create_panier(id_utilisateur)
@@ -396,7 +429,7 @@ def get_or_create_panier(id_utilisateur):
 @app.route("/panier/ajouter/<int:id_produit>", methods=["POST"])
 def ajouter_panier(id_produit):
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/connection")
 
     id_utilisateur = session["id_utilisateur"]
     id_panier = get_or_create_panier(id_utilisateur)
@@ -521,7 +554,7 @@ def nombre_articles_panier(id_utilisateur):
 @app.route("/panier/valider", methods=["POST"])
 def valider_panier():
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/connection")
 
     id_utilisateur = session["id_utilisateur"]
     id_panier = get_or_create_panier(id_utilisateur)
@@ -584,7 +617,7 @@ def valider_panier():
 @app.route("/commandes")
 def afficher_commandes():
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/connection")
 
     id_utilisateur = session["id_utilisateur"]
     db = get_db()
@@ -598,13 +631,64 @@ def afficher_commandes():
     db.close()
     return render_template("commandes.html", commandes=commandes)
 
-@app.route('/page03')
+@app.route('/déconnection')
 def logout():
     # On supprime l'utilisateur de la session
     session.pop('user', None)
     session.pop('id_utilisateur', None)
     # On affiche la page de confirmation de déconnexion
     return render_template('déconnection.html')
+
+@app.route("/categorie/<nom_categorie>")
+def afficher_categorie(nom_categorie):
+    db = get_db()
+
+    produits = db.execute("""
+        SELECT id_produit,
+               nom_bijoux AS nom,
+               prix,
+               photos,
+               type_bijoux,
+               genre,
+               stock,
+               description
+        FROM produits
+        WHERE type_bijoux = ? OR genre = ?
+        ORDER BY id_produit DESC
+    """, (nom_categorie, nom_categorie)).fetchall()
+
+    db.close()
+
+    return render_template(
+        "categorie_produits.html",
+        produits=produits,
+        nom_categorie=nom_categorie
+    )
+
+@app.route("/produit/<int:id_produit>")
+def fiche_produit(id_produit):
+    db = get_db()
+
+    produit = db.execute("""
+        SELECT id_produit,
+               nom_bijoux AS nom,
+               prix,
+               photos,
+               stock,
+               description,
+               type_bijoux,
+               genre
+        FROM produits
+        WHERE id_produit = ?
+    """, (id_produit,)).fetchone()
+
+    db.close()
+
+    if produit is None:
+        return redirect("/Liste_produits")
+
+    return render_template("fiche_produit.html", produit=produit)
+
 
 if __name__ == '__main__':
  app.run(debug=True)

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Maison Luxe - {{ titre }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='produits.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -13,16 +14,16 @@
             <div class="logo">MAISON LUXE</div>
             <ul>
                 <li><a href="/">Accueil</a></li>
-                <li><a href="/page5">Bagues</a></li>
-                <li><a href="/page7">Colliers</a></li>
-                <li><a href="/page8">Montres</a></li>
-                <li><a href="/page6">Boucles d'oreilles</a></li>
+                <li><a href="/Bagues">Bagues</a></li>
+                <li><a href="/Colliers">Colliers</a></li>
+                <li><a href="/Montres">Montres</a></li>
+                <li><a href="/Boucles">Boucles d'oreilles</a></li>
                 <li><a href="/page11">Notre Histoire</a></li>
                 <li><a href="/page12">Contacts</a></li>
                 {% if session.get('user') %}
-                    <li><a href="/page03" style="color: #630d16; font-weight: bold;">Déconnexion</a></li>
+                    <li><a href="/déconnection" style="color: #630d16; font-weight: bold;">Déconnexion</a></li>
                 {% else %}
-                    <li><a href="/page0">Connexion</a></li>
+                    <li><a href="/connection">Connexion</a></li>
                 {% endif %}
                 <li><a href="/panier">Panier</a></li>
             </ul>

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="fiche-produit-page">
+    <div class="fiche-produit-container">
+        <div class="fiche-image">
+            {% if produit.photos %}
+                <img src="{{ url_for('static', filename='images/' + produit.photos) }}" alt="{{ produit.nom }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ produit.nom }}">
+            {% endif %}
+        </div>
+
+        <div class="fiche-details">
+            <h1>{{ produit.nom }}</h1>
+            <p class="fiche-prix">{{ "%.2f"|format(produit.prix) }} €</p>
+            <p class="fiche-categorie">Catégorie : {{ produit.type_bijoux }}</p>
+            <p class="fiche-genre">Genre : {{ produit.genre }}</p>
+            <p class="fiche-stock">Stock disponible : {{ produit.stock }}</p>
+            {% if produit.description %}
+                <div class="fiche-description">
+                    <h2>Description</h2>
+                    <p>{{ produit.description }}</p>
+                </div>
+            {% endif %}
+
+            <form action="/panier/ajouter/{{ produit.id_produit }}" method="POST">
+                <button type="submit" class="btn-principal">Ajouter au panier</button>
+            </form>
+
+            <a href="/categorie/{{ produit.type_bijoux }}" class="btn-secondaire">Retour à la catégorie</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -5,23 +5,25 @@
         <h1>Nos Bagues d'Exception</h1>
     </section>
 
-    <div class="product-grid">
+    <div class="produits-grid">
         {% for p in produits %}
-                <div class="product-card">
-                    <!-- DEBUG: {{ p }} -->
-                    {% if p[6] %}
-                        <img src="{{ url_for('static', filename='images/' + p[6]) }}" alt="{{ p[4] }}" class="product-image" style="width: 200px; height: 200px; object-fit: cover;">
+        <center>
+            <a href="{{ url_for('fiche_produit', id_produit=p.id_produit) }}" class="produit-card">
+                <div class="produit-image-box">
+                    {% if p.photos %}
+                        <img src="{{ url_for('static', filename='images/' + p.photos) }}" alt="{{ p.nom_bijoux }}">
                     {% else %}
-                        <img src="{{ url_for('static', filename='images/bague2.jpg') }}" alt="{{ p[4] }}" class="product-image" style="width: 200px; height: 200px; object-fit: cover;">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ p.nom_bijoux }}">
                     {% endif %}
-                    <h3>{{ p[4] }}</h3>
-                    <p class="description">{{ p[7] }}</p>
-                    <p class="prix">{{ p[3] }} €</p>
-                    <p class="stock">Stock: {{ p[6] }}</p>
-                    <form action="{{ url_for('ajouter_panier', id_produit=p[0]) }}" method="POST">
-                        <button type="submit">Ajouter au panier</button>
-                    </form>
                 </div>
+                <div class="produit-info">
+                    <p class="produit-prix">{{ "%.2f"|format(p.prix) }} €</p>
+                    <h3 class="produit-nom">{{ p.nom_bijoux }}</h3>
+                    <p class="description">{{ p.description }}</p>
+                    <p class="stock">Stock: {{ p.stock }}</p>
+                </div>
+            </a>
+        </center>
         {% endfor %}
     </div>
 {% endblock %}

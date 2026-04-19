@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="catalogue-page">
+    <div class="catalogue-header">
+        <h1>{{ nom_categorie|capitalize }}</h1>
+        <p>Découvrez notre sélection de {{ nom_categorie }}.</p>
+    </div>
+
+    <div class="produits-grid">
+        {% for produit in produits %}
+            <a href="/produit/{{ produit['id_produit'] }}" class="produit-card">
+                
+                <div class="produit-image-box">
+                    {% if produit["photos"] %}
+                        <img src="{{ url_for('static', filename='images/' + produit['photos']) }}" alt="{{ produit['nom'] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ produit['nom'] }}">
+                    {% endif %}
+                </div>
+
+                <div class="produit-info">
+                    <p class="produit-prix">{{ "%.2f"|format(produit["prix"]) }} €</p>
+                    <h3 class="produit-nom">{{ produit["nom"] }}</h3>
+                </div>
+
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

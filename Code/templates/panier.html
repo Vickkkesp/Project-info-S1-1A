@@ -20,10 +20,10 @@
                             <div class="panier-item">
                                 
                                 <div class="panier-image">
-                                    {% if ligne["image"] %}
-                                        <img src="{{ url_for('static', filename='images/' + ligne['image']) }}" alt="{{ ligne['nom'] }}">
+                                    {% if ligne["photos"] %}
+                                        <img src="{{ url_for('static', filename='images/' + ligne['photos']) }}" alt="{{ ligne['nom'] }}">
                                     {% else %}
-                                        <img src="{{ url_for('static', filename='images/image_par_defaut.jpg') }}" alt="{{ ligne['nom'] }}">
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ ligne['nom'] }}">
                                     {% endif %}
                                 </div>
 
