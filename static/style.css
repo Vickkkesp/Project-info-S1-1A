@@ -200,30 +200,121 @@ footer p {
 }
 
 .promo-box {
-    background-color: var(--bordeaux);
-    border-top: 2px solid var(--white);
-    border-bottom: 2px solid var(--white);
-    padding: 30px;
+    background: linear-gradient(135deg, var(--card-bg) 0%, #faf8f3 100%);
+    border: 3px solid var(--or);
+    border-radius: 12px;
+    padding: 50px 40px;
     width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 20px;
     position: relative;
-    flex-wrap: wrap;
+    box-shadow: 0 15px 45px rgba(102, 0, 17, 0.15), 
+                0 0 0 1px rgba(212, 175, 55, 0.3);
+    transition: all 0.4s ease;
+}
+
+.promo-box:hover {
+    box-shadow: 0 20px 60px rgba(102, 0, 17, 0.25), 
+                0 0 30px rgba(212, 175, 55, 0.4);
+    transform: translateY(-5px);
+}
+
+.promo-box::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--or), transparent);
+}
+
+.promo-box::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--or), transparent);
 }
 
 .promo-box h1 {
-    color: var(--white);
-    margin: 5px 0;
+    color: var(--bordeaux);
+    margin: 10px 0;
     text-transform: uppercase;
     font-size: 2rem;
     letter-spacing: 2px;
+    font-family: 'Bodoni MT', serif;
+}
+
+.promo-box h2 {
+    color: var(--bordeaux);
+    margin: 15px 0;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 .promo-box p {
-    font-size: 0.85rem;
-    color: var(--gray-medium);
-    margin-top: 20px;
+    font-size: 1rem;
+    color: var(--text-color);
+    margin: 10px 0;
+}
+
+.promo-box p:last-child {
+    color: #555;
+}
+
+.promo-box .badge {
+    color: var(--or);
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 5px 0;
+}
+
+/* --- ACCUEIL PAGE STYLES --- */
+.accueil-container {
+    text-align: center;
+    padding-top: 50px;
+}
+
+.accueil-container h1 {
+    font-family: 'Bodoni MT', serif;
+    font-size: 80px;
+    margin-bottom: 0;
+    color: var(--text-color);
+}
+
+.accueil-container > p {
+    font-style: italic;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.ligne-images { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    flex-wrap: wrap; 
+    margin-top: 40px; 
+}
+
+.item-accueil img {
+    border: 1px solid var(--border-gray);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.item-accueil img:hover {
+    transform: scale(1.05);
+    border-color: var(--bordeaux);
+    box-shadow: 0 8px 20px rgba(102, 0, 17, 0.2);
 }
 
 .titre {

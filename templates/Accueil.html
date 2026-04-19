@@ -1,41 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="text-align: center; padding-top: 50px;">
+<div class="accueil-container">
     
-    <h1 style="font-family: 'Bodoni MT', serif; font-size: 80px; margin-bottom: 0;">Impérial Joaillerie</h1>
-    <p style="font-style: italic; margin-bottom: 40px;">L'élégance commence par un bijou qui vous ressemble.</p>
-
-    <style>
-        .promo-box {
-            border: 2px solid #660011;
-            padding: 30px;
-            margin: 20px auto;
-            background-color: white;
-            max-width: 800px;
-        }
-        .badge { color: #660011; font-size: 28px; font-weight: bold; margin: 0; }
-        .ligne-images { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            flex-wrap: wrap; 
-            margin-top: 40px; 
-        }
-        .item-accueil img {
-            border: 1px solid #ddd;
-            transition: 0.3s;
-        }
-        .item-accueil img:hover {
-            transform: scale(1.05);
-            border-color: #660011;
-        }
-    </style>
+    <h1>Impérial Joaillerie</h1>
+    <p>L'élégance commence par un bijou qui vous ressemble.</p>
 
     <div class="promo-box">
         <p class="badge">Offre Spéciale</p>
-        <h2 style="font-size: 32px;">-10% sur une grande sélection de bijoux ! *</h2>
-        <p style="color: #555;">*Profitez de nos offres exclusives jusqu'au 4 mai.</p>
+        <h2>-10% sur une grande sélection de bijoux ! *</h2>
+        <p>*Profitez de nos offres exclusives jusqu'au 4 mai.</p>
         <img src="{{ url_for('static', filename='images/promotions.jpg') }}" width="400" alt="Promotions">
     </div>  
 
