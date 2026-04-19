@@ -17,8 +17,7 @@
                 {% if lignes %}
                     <div class="panier-liste">
                         {% for ligne in lignes %}
-                            <div class="panier-item">
-                                
+                            <div class="panier-item-colonne">
                                 <div class="panier-image">
                                     {% if ligne["photos"] %}
                                         <img src="{{ url_for('static', filename='images/' + ligne['photos']) }}" alt="{{ ligne['nom'] }}">
@@ -26,29 +25,26 @@
                                         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ ligne['nom'] }}">
                                     {% endif %}
                                 </div>
-
                                 <div class="panier-infos">
                                     <h3>{{ ligne["nom"] }}</h3>
                                     <p class="prix-unitaire">{{ ligne["prix"] }} €</p>
                                     <p class="stock">En stock : {{ ligne["stock"] }}</p>
                                     <p class="sous-total">Sous-total : {{ ligne["sous_total"] }} €</p>
-
                                     <div class="quantite-actions">
                                         <div class="quantite-box">
                                             <form action="/panier/diminuer/{{ ligne['id_ligne_panier'] }}" method="POST">
                                                 <button type="submit">−</button>
                                             </form>
-
                                             <span>{{ ligne["quantite"] }}</span>
-
                                             <form action="/panier/augmenter/{{ ligne['id_ligne_panier'] }}" method="POST">
                                                 <button type="submit">+</button>
                                             </form>
                                         </div>
-
                                         <form action="/panier/supprimer/{{ ligne['id_ligne_panier'] }}" method="POST" class="supprimer-form">
                                             <button type="submit" class="btn-lien">Supprimer</button>
                                         </form>
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>

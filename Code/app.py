@@ -366,7 +366,7 @@ def afficher_panier():
 
     lignes = db.execute("""
         SELECT lp.id_ligne_panier, lp.quantite,
-               p.id_produit, p.nom_bijoux AS nom, p.prix, p.stock, p.image,
+               p.id_produit, p.nom_bijoux AS nom, p.prix, p.stock, p.photos,
                (lp.quantite * p.prix) AS sous_total
         FROM ligne_panier lp
         JOIN produits p ON lp.id_produit = p.id_produit
@@ -612,7 +612,7 @@ def valider_panier():
     db.commit()
     db.close()
 
-    return redirect("/panier")
+    return render_template("commande_succes.html")
 
 @app.route("/commandes")
 def afficher_commandes():
@@ -689,6 +689,24 @@ def fiche_produit(id_produit):
 
     return render_template("fiche_produit.html", produit=produit)
 
+@app.route("/panier/valider", methods=["POST"])
+def valider_commande():
+    if "id_utilisateur" not in session:
+        return redirect("/connection")
+
+    id_utilisateur = session["id_utilisateur"]
+    id_panier = get_or_create_panier(id_utilisateur)
+
+    db = get_db()
+    # Ici, on pourrait enregistrer la commande dans une table "commandes" si besoin
+    db.execute(
+        "DELETE FROM ligne_panier WHERE id_panier = ?",
+        (id_panier,)
+    )
+    db.commit()
+    db.close()
+
+    return render_template("commande_succes.html")
 
 if __name__ == '__main__':
  app.run(debug=True)

@@ -1,3 +1,14 @@
+/* Affichage en colonne pour chaque produit du panier */
+.panier-item-colonne {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 0;
+    border-top: 1px solid #e2d7c5;
+    background: #fffdf8;
+    border-radius: 14px;
+    margin-bottom: 12px;
+}
 .panier-page {
     background-color: #f6f4ea;
     padding: 40px 30px 60px;
@@ -67,18 +78,6 @@
     gap: 22px;
 }
 
-.panier-item {
-    display: grid;
-    grid-template-columns: 170px 1fr;
-    gap: 24px;
-    padding: 22px 0;
-    border-top: 1px solid #e2d7c5;
-}
-
-.panier-item:first-child {
-    border-top: none;
-    padding-top: 8px;
-}
 
 .panier-image {
     display: flex;
