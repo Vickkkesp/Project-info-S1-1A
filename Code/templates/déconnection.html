@@ -1,11 +1,31 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Déconnection</title>
-</head>
-<body>
-    <h1>Déconnection</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/logout.css') }}">
+
+<main class="logout-wrapper">
+    <div class="luxury-card">
+        <header class="card-header">
+            <div class="ornament">✦</div>
+            <h1>Session Clôturée</h1>
+        </header>
+
+        <section class="card-body">
+            <div class="elegant-line"></div>
+            <p class="subtitle">Maison de Haute Joaillerie</p>
+            <p class="farewell-message">
+                Votre visite s'achève ici en toute sécurité. <br> 
+                Nous préparons déjà nos prochaines créations pour votre retour.
+            </p>
+            <div class="elegant-line"></div>
+        </section>
+
+        <footer class="card-footer">
+            <a href="/"Accueil class="btn-luxe">
+                Regagner la Boutique
+            </a>
+        </footer>
+    </div>
+</main>
+{% endblock %}
 
