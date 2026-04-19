@@ -187,7 +187,7 @@ def profil():
 @app.route("/panier")
 def afficher_panier():
     if "id_utilisateur" not in session:
-        return redirect("/page0")
+        return redirect("/login")
 
     id_utilisateur = session["id_utilisateur"]
     id_panier = get_or_create_panier(id_utilisateur)
