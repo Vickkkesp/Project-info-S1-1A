@@ -7,10 +7,20 @@
 
     <div class="product-grid">
         {% for p in produits %}
-            <div class="product-card">
-                <h3>{{ p.nom }}</h3>
-                <p>{{ p.prix }} €</p>
-            </div>
+                <div class="product-card">
+                    {% if p.image %}
+                        <img src="{{ url_for('static', filename='images/' + p.image) }}" alt="{{ p.nom_bijoux }}" class="product-image">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/photo-montre.webp') }}" alt="{{ p.nom_bijoux }}" class="product-image">
+                    {% endif %}
+                    <h3>{{ p.nom_bijoux }}</h3>
+                    <p class="description">{{ p.description }}</p>
+                    <p class="prix">{{ p.prix }} €</p>
+                    <p class="stock">Stock: {{ p.stock }}</p>
+                    <form action="{{ url_for('ajouter_panier', id_produit=p.id_produit) }}" method="POST">
+                        <button type="submit">Ajouter au panier</button>
+                    </form>
+                </div>
         {% endfor %}
     </div>
 {% endblock %}

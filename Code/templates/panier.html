@@ -1,67 +1,96 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Panier</title>
-</head>
-<body>
+<section class="panier-page">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/panier.css') }}">
+    <div class="panier-wrapper">
+     
+        <div class="panier-gauche">
+            <div class="panier-card">
+                <div class="panier-header">
+                    <h1>Mon panier</h1>
+                    <a href="/Liste_produits" class="retour-produits">Retour aux produits</a>
+                </div>
 
-<h1>Mon panier</h1>
-<a href="/Liste_produits">Retour aux produits</a>
+                <p class="nb-articles">Nombre d'articles : {{ nb_articles }}</p>
 
-<p>Nombre d'articles : {{ nb_articles }}</p>
+                {% if lignes %}
+                    <div class="panier-liste">
+                        {% for ligne in lignes %}
+                            <div class="panier-item">
+                                
+                                <div class="panier-image">
+                                    {% if ligne["image"] %}
+                                        <img src="{{ url_for('static', filename='images/' + ligne['image']) }}" alt="{{ ligne['nom'] }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/image_par_defaut.jpg') }}" alt="{{ ligne['nom'] }}">
+                                    {% endif %}
+                                </div>
 
-<hr>
+                                <div class="panier-infos">
+                                    <h3>{{ ligne["nom"] }}</h3>
+                                    <p class="prix-unitaire">{{ ligne["prix"] }} €</p>
+                                    <p class="stock">En stock : {{ ligne["stock"] }}</p>
+                                    <p class="sous-total">Sous-total : {{ ligne["sous_total"] }} €</p>
 
-{% if lignes %}
-    {% for ligne in lignes %}
-        <div>
-            <h3>{{ ligne["nom"] }}</h3>
-            <p>Prix unitaire : {{ ligne["prix"] }} €</p>
-            <p>Stock disponible : {{ ligne["stock"] }}</p>
-            <p>Quantité : {{ ligne["quantite"] }}</p>
-            <p>Sous-total : {{ ligne["sous_total"] }} €</p>
+                                    <div class="quantite-actions">
+                                        <div class="quantite-box">
+                                            <form action="/panier/diminuer/{{ ligne['id_ligne_panier'] }}" method="POST">
+                                                <button type="submit">−</button>
+                                            </form>
 
-            <form action="/panier/augmenter/<int:id_ligne>" method="POST" style="display:inline;">
-                <button type="submit">+</button>
-            </form>
+                                            <span>{{ ligne["quantite"] }}</span>
 
-            <form action="/panier/diminuer/<int:id_ligne>" method="POST" style="display:inline;">
-                <button type="submit">-</button>
-            </form>
+                                            <form action="/panier/augmenter/{{ ligne['id_ligne_panier'] }}" method="POST">
+                                                <button type="submit">+</button>
+                                            </form>
+                                        </div>
 
-            <form action="/panier/supprimer/<int:id_ligne>" method="POST" style="display:inline;">
-                <button type="submit">Supprimer</button>
-            </form>
+                                        <form action="/panier/supprimer/{{ ligne['id_ligne_panier'] }}" method="POST" class="supprimer-form">
+                                            <button type="submit" class="btn-lien">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="panier-bas">
+                        <form action="/panier/vider" method="POST">
+                            <button type="submit" class="btn-secondaire">Vider le panier</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="panier-vide">
+                        <p>Le panier est vide.</p>
+                        <a href="/Liste_produits" class="btn-principal">Découvrir nos produits</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-        <hr>
-    {% endfor %}
 
-    <h2>Total : {{ total }} €</h2>
+        <div class="panier-droite">
+            <div class="resume-card">
+                <h2>Résumé</h2>
+                <p class="resume-ligne">
+                    <span>Articles</span>
+                    <span>{{ nb_articles }}</span>
+                </p>
+                <p class="resume-ligne total">
+                    <span>Total</span>
+                    <span>{{ total }} €</span>
+                </p>
 
-    <form action="/panier/vider" method="POST">
-        <button type="submit">Vider le panier</button>
-    </form>
+                {% if lignes %}
+                    <form action="/panier/valider" method="POST">
+                        <button type="submit" class="btn-commander">Passer la commande</button>
+                    </form>
+                {% else %}
+                    <button type="button" class="btn-commander disabled" disabled>Passer la commande</button>
+                {% endif %}
+            </div>
+        </div>
 
-    <br>
-
-    <form action="/panier/valider" method="POST">
-        <button type="submit">Valider la commande</button>
-    </form>
-
-{% else %}
-    <p>Le panier est vide.</p>
-{% endif %}
-
-</body>
-</html>
-{% endblock %}
-
-{% block footer %}
-    <footer>
-        <p>&copy; 2023 Ma Boutique. Tous droits réservés.</p>
-    </footer>
+    </div>
+</section>
 {% endblock %}

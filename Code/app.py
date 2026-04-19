@@ -104,32 +104,42 @@ def page4_html():
 
 @app.route("/page5")
 def page5_html():
-    liste_bagues = [
-        {"nom": "Alliance Éclat", "prix": 1200, "image": "bague1.jpg"},
-        {"nom": "Solitaire Impérial", "prix": 2500, "image": "bague2.jpg"},
-        {"nom": "Chevalière Or", "prix": 950, "image": "bague3.jpg"}
-    ]
-    return render_template("Bagues.html", titre="Collection Bagues", produits=liste_bagues) #page pour les bagues
+    conn = get_db()
+    conn.row_factory = None  # Désactiver sqlite3.Row pour récupérer des tuples
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Bague'")
+    produits = cursor.fetchall()
+    conn.close()
+    return render_template("Bagues.html", titre="Collection Bagues", produits=produits) #page pour les bagues
 
 @app.route("/page6")
 def page6_html():
- return render_template("boucles.html") #page pour les boucles d oreiles
+    conn = get_db()
+    conn.row_factory = None  # Désactiver sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Boucles'")
+    produits = cursor.fetchall()
+    conn.close()
+    return render_template("boucles.html", produits=produits) #page pour les boucles d oreiles
 
 @app.route("/page7")
 def page7_html():
- liste_colliers = [
-        {"nom": "Rivière d'Argent", "prix": 1800, "image": "collier1.jpg"},
-        {"nom": "Sautoir Perles", "prix": 3200, "image": "collier2.jpg"}
- ]
- return render_template("collier.html", titre="Collection Colliers", produits=liste_colliers) #page pour les colliers
+    conn = get_db()
+    conn.row_factory = None  # Désactiver sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Collier'")
+    produits = cursor.fetchall()
+    conn.close()
+    return render_template("collier.html", titre="Collection Colliers", produits=produits) #page pour les colliers
 
 @app.route("/page8")
 def page8_html():
- liste_montres = [
-        {"nom": "Chronographe Bordeaux", "prix": 4500, "image": "montre1.jpg"},
-        {"nom": "L'Automatique Or", "prix": 7800, "image": "montre2.jpg"}
-    ]
- return render_template("montres.html", titre="Collection Montres", produits=liste_montres) #page pour les montres
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM produits WHERE type_bijoux = 'Montre'")
+    produits = cursor.fetchall()
+    conn.close()
+    return render_template("montres.html", titre="Collection Montres", produits=produits) #page pour les montres
 
 @app.route("/page9")
 def page9_html():
@@ -344,7 +354,7 @@ def afficher_panier():
 
     lignes = db.execute("""
         SELECT lp.id_ligne_panier, lp.quantite,
-               p.id_produit, p.nom_bijoux AS nom, p.prix, p.stock,
+               p.id_produit, p.nom_bijoux AS nom, p.prix, p.stock, p.image,
                (lp.quantite * p.prix) AS sous_total
         FROM ligne_panier lp
         JOIN produits p ON lp.id_produit = p.id_produit

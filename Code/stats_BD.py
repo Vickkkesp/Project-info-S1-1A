@@ -39,6 +39,7 @@ def init_db():
             genre TEXT,
             prix REAL,
             nom_bijoux TEXT UNIQUE,
+            image TEXT,
             stock INTEGER DEFAULT 0
         )
     """)
@@ -96,10 +97,38 @@ def init_db():
         )
     """)
     
-    # Ajouter la colonne stock si elle manque dans une ancienne base
+    # Ajouter les colonnes manquantes si elles n'existent pas dans une ancienne base
     existing_columns = [row[1] for row in conn.execute("PRAGMA table_info(produits)")]
+    if "type_bijoux" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN type_bijoux TEXT")
+    if "genre" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN genre TEXT")
+    if "prix" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN prix REAL")
+    if "nom_bijoux" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN nom_bijoux TEXT UNIQUE")
     if "stock" not in existing_columns:
         conn.execute("ALTER TABLE produits ADD COLUMN stock INTEGER DEFAULT 0")
+    if "image" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN image TEXT")
+    if "description" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN description TEXT")
+
+    # Insérer des produits de test s'il n'en existe pas
+    count = conn.execute("SELECT COUNT(*) FROM produits").fetchone()[0]
+    if count == 0:
+        cursor.execute("""
+            INSERT INTO produits (type_bijoux, genre, prix, nom_bijoux, image, stock, description) VALUES
+            ('Bague', 'Femme', 1200.00, 'Alliance Éclat', 'bague2.jpg', 10, 'Élégante alliance en or blanc avec diamant'),
+            ('Bague', 'Femme', 2500.00, 'Solitaire Impérial', 'bague2.jpg', 8, 'Solitaire prestigieux en platine'),
+            ('Bague', 'Homme', 950.00, 'Chevalière Or', 'bague2.jpg', 15, 'Chevalière classique en or massif'),
+            ('Collier', 'Femme', 1800.00, 'Rivière d''Argent', 'collier.jpg', 12, 'Collier rivière en argent 925'),
+            ('Collier', 'Femme', 3200.00, 'Sautoir Perles', 'collier.jpg', 7, 'Sautoir élégant avec perles de culture'),
+            ('Montre', 'Femme', 4500.00, 'Chronographe Bordeaux', 'photo-montre.webp', 5, 'Chronographe suisse automatic'),
+            ('Montre', 'Homme', 7800.00, 'L''Automatique Or', 'photo-montre.webp', 3, 'Montre automatique en or 18 carats'),
+            ('Boucles', 'Femme', 450.00, 'Boucles Perles', 'photo boucle.avif', 20, 'Boucles d''oreilles perles de culture'),
+            ('Boucles', 'Femme', 650.00, 'Boucles Diamant', 'photo boucle.avif', 14, 'Boucles d''oreilles diamants certifiés')
+        """)
 
     conn.commit()
     conn.close()
