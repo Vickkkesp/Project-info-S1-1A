@@ -21,7 +21,6 @@
                     <label for="Type">Type de Bijou</label>
                     <select name="Type" id="Type" required>
                         <option value="bague">Bague</option>
-                        <option value="boucles d'oreilles">Boucles d'oreilles</option>
                         <option value="collier">Collier</option>
                         <option value="montre">Montre</option>
                     </select>
@@ -30,8 +29,8 @@
                 <div class="form-group">
                     <label for="Matiere">Métal Précieux</label>
                     <select name="Matiere" id="Matiere" required>
-                        <option value="or">Or</option>
-                        <option value="argent">Argent</option>
+                        <option value="Or">Or</option>
+                        <option value="Argent">Argent</option>
                     </select>
                 </div>
             </div>
@@ -63,7 +62,7 @@
     <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
     <p class="slogan">Expertise . Élégance . Tradition</p>
     <div class="footer-logo">
-        <img src="{{ url_for('static', filename='images/logolivraison.png') }}" alt="Logo Livraison">
+        <img src="{{ url_for('static', filename='images/logolivraison.jpg') }}" alt="Logo Livraison">
     </div>
 </div>
 {% endblock %}

@@ -4,41 +4,106 @@
 
 {% block content %}
 <style>
-    body { font-family: 'Bodoni MT'; }
-    .btn-container { text-align: center; margin: 20px 0; }
+    
+    /* Bouton Ajouter un produit - Descendu pour ne pas gêner le header */
+    .btn-ajout-fixe {
+        position: absolute;
+        top: 100px; /* Ajuste cette valeur (100px, 120px...) selon la hauteur de ton menu */
+        right: 40px;
+        background-color: #000;
+        color: #fff !important;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 2px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 2px;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .btn-ajout-fixe:hover { 
+        background-color: #333; 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Grille pour les graphiques */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .graph-item {
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+    }
+
+    .graph-item h2 {
+        font-size: 1.1em;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .graph-item img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Bouton Générer au centre */
+    .btn-container { text-align: center; margin: 30px 0; }
     .btn-generer { 
         background-color: rgba(226, 201, 13, 0.507); 
-        color: rgb(0, 0, 0); 
+        color: #000; 
         padding: 12px 24px; 
         text-decoration: none; 
         border-radius: 4px; 
         font-weight: bold;
         display: inline-block;
     }
-    .btn-generer:hover { background-color: rgba(217, 211, 163, 0.382); }
-    img { margin: 20px 0; }
 </style>
+
+<a href="/Ajout_produit" class="btn-ajout-fixe">+ Ajouter un bijou</a>
+
 <center>
-    <h1>Tableau de bord administratif</h1>
+    <h1 style="margin-top: 60px;">Tableau de bord administratif</h1>
     
     <div class="btn-container">
         <a href="/generer_graphes" class="btn-generer">Générer de nouveaux graphes</a>
     </div>
 
-    <h2>Graphique utilisateurs</h2>
-    <img src="{{ url_for('static', filename='graphs/graph_utilisateurs.png') }}?v={{ range(1000000)|random }}" alt="Graphique utilisateurs" width="800" height="800">
+    <div class="dashboard-grid">
+        <div class="graph-item">
+            <h2>Utilisateurs</h2>
+            <img src="{{ url_for('static', filename='graphs/graph_utilisateurs.png') }}?v={{ range(1000000)|random }}" alt="Graphique utilisateurs">
+        </div>
 
-    <h2>Graphique distribution produits</h2>
-    <img src="{{ url_for('static', filename='graphs/graph_distribution_produits.png') }}?v={{ range(1000000)|random }}" alt="Graphique distribution produits" width="800" height="800">
+        <div class="graph-item">
+            <h2>Distribution produits</h2>
+            <img src="{{ url_for('static', filename='graphs/graph_distribution_produits.png') }}?v={{ range(1000000)|random }}" alt="Graphique distribution produits">
+        </div>
 
-    <h2>Graphique Chiffre d'affaires</h2>
-    <img src="{{ url_for('static', filename='graphs/graph_chiffre_affaire.png') }}?v={{ range(1000000)|random }}" alt="Graphique chiffre d'affaire" width="800" height="800">   
+        <div class="graph-item">
+            <h2>Chiffre d'affaires</h2>
+            <img src="{{ url_for('static', filename='graphs/graph_chiffre_affaire.png') }}?v={{ range(1000000)|random }}" alt="Graphique chiffre d'affaire">
+        </div>
 
-    <h2>Graphique ventes par mois</h2>
-    <img src="{{ url_for('static', filename='graphs/graph_ventes_par_mois.png') }}?v={{ range(1000000)|random }}" alt="Graphique ventes par mois" width="800" height="800">
+        <div class="graph-item">
+            <h2>Ventes par mois</h2>
+            <img src="{{ url_for('static', filename='graphs/graph_ventes_par_mois.png') }}?v={{ range(1000000)|random }}" alt="Graphique ventes par mois">
+        </div>
+    </div>
 
-    <h1>Fin données administratives</h1>
-    <h2><a href="/Ajout_produit">Pour ajouter un bijoux</a></h2>
+    <h1 style="margin-top: 40px; font-size: 1.2em; color: #666;">Fin données administratives</h1>
 </center>
 {% endblock %}
 
@@ -46,6 +111,6 @@
 <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
 <p>Expertise . Élégance . Tradition</p>
 <div style="margin-top: 50px; padding-bottom: 30px;">
-    <img src="{{ url_for('static', filename='images/logolivraison.png') }}" width="600">
+    <img src="{{ url_for('static', filename='images/logolivraison.jpg') }}" width="600">
 </div>
 {% endblock %}
