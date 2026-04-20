@@ -23,10 +23,6 @@ def creastion_compte():
 def ajouter_produit():
     return render_template("Ajout_produit.html")
 
-@app.route("/liste_produits")
-def liste_produits():
-    return render_template("Liste_produits.html")
-
 @app.route("/admin")
 def admin():
     if not session.get("is_admin"):
