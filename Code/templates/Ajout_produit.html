@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title> Ajout_produit</title>
-</head>
-<body>
- <h1>Entrez le produit à ajouter</h1>
+{% extends "base.html" %}
 
- {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+{% set titre = "Ajout Produit" %}
 
- <form method="POST" action="/ajouter_produit" >
+{% block content %}
+<h1>Entrez le produit à ajouter</h1>
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST" action="/ajouter_produit" >
     <label for="Type">Type de Bijoux</label><br>
     <select name ="Type" id = "Type" required>
         <option value = "bague">bague</option>
@@ -38,9 +37,19 @@
     </select><br><br>
     
     <button type = "submit">Ajouter</button>
- </form>
+</form>
 
- <h2><a href="/Liste_produits">Retour à la liste</a></h2>
- <h2><a href="/admin">Retour à la page admin</a></h2>
+<h2><a href="/Liste_produits">Retour à la liste</a></h2>
+<h2><a href="/admin">Retour à la page admin</a></h2>
+{% endblock %}
+
+{% block footer %}
+<p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
+<p>Expertise . Élégance . Tradition</p>
+<div style="margin-top: 50px; padding-bottom: 30px;">
+    <img src="{{ url_for('static', filename='images/logolivraison.png') }}" width="600">
+</div>
+{% endblock %}
+</footer>
 </body>
 </html>

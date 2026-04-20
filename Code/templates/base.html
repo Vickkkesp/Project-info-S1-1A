@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Maison Luxe - {{ titre }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,6 +16,11 @@
                 <li><a href="/page5">Bagues</a></li>
                 <li><a href="/page7">Colliers</a></li>
                 <li><a href="/page8">Montres</a></li>
+                <li><a href="/page11">Notre Histoire</a></li>
+                <li><a href="/page12">Contacts</a></li>
+                <li><a href="/page0">Connexion</a></li>
+                
+
             </ul>
         </nav>
     </header>
@@ -25,8 +30,13 @@
     </main>
 
     <footer>
+        {% block footer %}
         <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
         <p>Expertise . Élégance . Tradition</p>
+        <div style="margin-top: 50px; padding-bottom: 30px;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" width="600">
+        </div>
+        {% endblock %}
     </footer>
 
 </body>

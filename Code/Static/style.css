@@ -73,7 +73,7 @@
 
 .slogan {
     font-family: "Bodoni MT", serif;
-    font-size: 30px;
+    font-size: 20px;
     color: black;
     margin-top: 0; /* colle le texte au titre */
 }
@@ -258,6 +258,28 @@ nav ul li a:hover {
 }
 
 .product-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Footer */
+footer {
+    background-color: var(--blanc);
+    text-align: center;
+    padding: 20px 5%;
+    border-top: 2px solid var(--bordeaux);
+    margin-top: 50px;
+}
+
+footer p {
+    margin: 5px 0;
+    color: var(--noir);
+    font-size: 0.9rem;
+}
+
+footer img {
+    margin-top: 20px;
+}
     max-width: 90%;
     max-height: 90%;
 }

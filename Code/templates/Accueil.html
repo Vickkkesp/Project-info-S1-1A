@@ -1,22 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title> Accueil</title>
- <link rel="stylesheet" href="style.css">
- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
- <style>
-        body {
-            background-color: rgba(217, 211, 163, 0.382); 
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding-top: 50px;">
+    
+    <h1 style="font-family: 'Bodoni MT', serif; font-size: 80px; margin-bottom: 0;">Impérial Joaillerie</h1>
+    <p style="font-style: italic; margin-bottom: 40px;">L'élégance commence par un bijou qui vous ressemble.</p>
+
+    <style>
+        .promo-box {
+            border: 2px solid #660011;
+            padding: 30px;
+            margin: 20px auto;
+            background-color: white;
+            max-width: 800px;
         }
-        h1 {
-            font-family: 'Bodoni MT';"
-            font-size: 120px;
-            color: rgb(0, 0, 0); 
+        .badge { color: #660011; font-size: 28px; font-weight: bold; margin: 0; }
+        .ligne-images { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            margin-top: 40px; 
+        }
+        .item-accueil img {
+            border: 1px solid #ddd;
+            transition: 0.3s;
+        }
+        .item-accueil img:hover {
+            transform: scale(1.05);
+            border-color: #660011;
         }
     </style>
 
-</head>
-<body>
+    </style>
+
     {%if connect %}
         <a>Bonjour {{prenom}}<a><br>
         <a href="/deconnexion" class ="login-link">Se déconnecter</a>
@@ -24,120 +41,40 @@
         <a href="/page0" class="login-link">Connexion</a>
     {% endif %}
 
- <center> <h1 class="titre">Impérial joaillerie</h1 </center> 
- <center> <p class="slogan">L'élégance commence par un bijou qui vous ressemble.</p>
- </center>
- <!--<center><img src="{{ url_for('static', filename='images/image_acc1.jpg') }}"></center>-->
+    <div class="promo-box">
+        <p class="badge">Offre Spéciale</p>
+        <h2 style="font-size: 32px;">-10% sur une grande sélection de bijoux ! *</h2>
+        <p style="color: #555;">*Profitez de nos offres exclusives jusqu'au 4 mai.</p>
+        <img src="{{ url_for('static', filename='images/promotions.jpg') }}" width="400" alt="Promotions">
+    </div>
 
- <ul class="dropdownmenu">
-    <li><a href="/page4">Soldes</a></li>
-    <li><a href="/page5">Bagues</a>
-        <ul>
-            <li><a href="/page15">Or</a></li>
-            <li><a href="/page16">Argent</a></li>
-        </ul>
-    </li>
-    <li><a href="/page7">Colliers</a>
-        <ul>
-            <li><a href="/page13">Or</a></li>
-            <li><a href="/page14">Argent</a></li>
-        </ul>
-     </li>
-     <li><a href="/page8">Montres</a>
-        <ul>
-            <li><a href="/page9">Or</a></li>
-            <li><a href="/page10">Argent</a></li>
-        </ul>
-     </li>
-     <li><a href="/page6">Boucles d'oreille</a>
-        <ul>
-            <li><a href="/page17">Or</a></li>
-            <li><a href="/page18">Argent</a></li>
-        </ul>
-     </li>
-     <li><a href="/page11">Notre Histoire</a>
-     </li>
-     <li><a href="/page12">Nos contacts</a>
-     </li>
-</ul>
-<center><style id="q2g6te">
-.produit-container {
-    text-align: center;
-    position: relative;
-    display: inline-block;
-}
+    <div class="ligne-images">
+        <div class="item-accueil">
+            <a href="/page5">
+                <img src="{{ url_for('static', filename='images/image bague2.jpg') }}" width="280" height="280" alt="Bagues">
+            </a>
+        </div>
 
-.produit-texte {
-    display: none;
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-weight: bold;
-}
+        <div class="item-accueil">
+            <a href="/page6">
+                <img src="{{ url_for('static', filename='images/photo boucle.avif') }}" width="280" height="280" alt="Boucles">
+            </a>
+        </div>
 
-.produit-container:hover .produit-texte {
-    display: block;
-}
-</style>
-<!--<div class="produit-container" id="oyib9l">
-<a href="/page1">
-<img src="{{ url_for('static', filename='images/image_prod1.jpg') }}" 
-width="400" height="400" alt="Produit">
-</a>-->
+        <div class="item-accueil">
+            <a href="/page8">
+                <img src="{{ url_for('static', filename='images/photo-montre.webp') }}" width="280" height="280" alt="Montres">
+            </a>
+        </div>
 
+        <div class="item-accueil">
+            <a href="/page7">
+                <img src="{{ url_for('static', filename='images/image collier.jpg') }}" width="280" height="280" alt="Colliers">
+            </a>
+        </div>
+    </div>
 
-<div class="promo-box">
-    <h1 class="badge">Offre Spéciale</h1>
-    <h1>-10% sur une grande sélection de bijoux ! *</h1>
-    <p>*Profitez de nos offres exclusives jusqu'au 4 mai.</p>
+    </div>
 
- <img src="{{ url_for('static', filename='images/promotions.jpg') }}" 
- width="400" height="400">
-
-</div>  
-
-
-<div class="ligne-images">
-
-
- <div class="bague" id="oyib9m">
- <a href="/page5">
- <img src="{{ url_for('static', filename='images/image bague2.jpg') }}" 
- width="400" height="400" alt="Bagues">
- </a>
- </div>
-
-
- <div class="boucle" id="oyib9n">
- <a href="/page6">
- <img src="{{ url_for('static', filename='images/photo boucle.avif') }}" 
- width="400" height="400" alt="boucles d'oreilles">
- </a>
- </div>
-
-
- <div class="montre" id="oyib9o">
- <a href="/page8">
- <img src="{{ url_for('static', filename='images/photo-montre.webp') }}" 
- width="400" height="400" alt="Montres">
- </a>
- </div>
-
-
- <div class="collier" id="oyib9p">
- <a href="/page7">
- <img src="{{ url_for('static', filename='images/image collier.jpg') }}" 
- width="400" height="400" alt="Colliers">
- </a>
- </div>
 </div>
-
-
-<div class="logo" id="oyib5p">
- <img src="{{ url_for('static', filename='images/logolivraison.png') }}">
- </div>
-
-
-</body>
-</html>
+{% endblock %}

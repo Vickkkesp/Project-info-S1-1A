@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Connexion</title>
-</head>
-<style>
-        body {
-            background-color: rgba(222, 218, 187, 0.382); 
-    
-        }
-        </style>
-<body>
-    <center>
+{% extends "base.html" %}
+
+{% set titre = "Connexion" %}
+
+{% block content %}
+<div style="text-align: center; padding-top: 50px;">
     <h1>Connexion</h1>
 
     {% if message %}
         <p style="color:red;">{{ message }}</p>
     {% endif %}
 
-    
-    <form method="POST" action ="/login">
+    <form method="POST" action="/login" style="max-width: 400px; margin: 0 auto;">
         <label for="email">Email :</label><br>
         <input type="text" id="email" name="email" required><br><br>
 
@@ -29,12 +20,9 @@
         <button type="submit">Se connecter</button>
     </form>
 
-    
+    <br>
     <a href="/page01">Pas encore de compte ? S'inscrire</a>
-
-<br>
+    <br><br>
     <a href="/">Retour à l'accueil</a>
-    <br><br></center>
-
-</body>
-</html>
+</div>
+{% endblock %}

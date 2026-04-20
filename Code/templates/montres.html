@@ -1,33 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Maison Luxe - {{ titre }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
-</head>
-<body>
+{% extends "base.html" %}
 
-    <header>
-        <nav>
-            <div class="logo">MAISON LUXE</div>
-            <ul>
-                <li><a href="/">Accueil</a></li>
-                <li><a href="/page5">Bagues</a></li>
-                <li><a href="/page7">Colliers</a></li>
-                <li><a href="/page8">Montres</a></li>
-            </ul>
-        </nav>
-    </header>
+{% block content %}
+    <section class="hero-section">
+        <h1>Nos Montres d'Exception</h1>
+    </section>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
-        <p>Expertise . Élégance . Tradition</p>
-    </footer>
-
-</body>
-</html>
+    <div class="product-grid">
+        {% for p in produits %}
+            <div class="product-card">
+                <h3>{{ p.nom }}</h3>
+                <p>{{ p.prix }} €</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

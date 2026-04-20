@@ -1,7 +1,6 @@
-from email import message
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-from stats_BD import graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
+from stats_BD import get_db, graphique_utilisateurs, chiffreAffaire, distribution_produits, ventes_par_mois, init_db # import de la fonction pour faire les graphes
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -206,7 +205,7 @@ def ajouter_produit():
   except sqlite3.IntegrityError: #si le nom du bijoux existe déjà
         error = "nom de bijoux déjà utilisé" #on crée une variable qui contient le message d'erreur
         conn.close() #on coupe la connection
-        return render_template("/Ajout_produit.html", error = error)
+        return render_template("Ajout_produit.html", error = error)
   conn.commit()
   conn.close()
 
@@ -229,12 +228,20 @@ def ajouter_utilisateur():
     except sqlite3.IntegrityError: #si le nom utilisateur ou l'email est en double
       error = "nom d'utilisateur ou email déjà utilisé" #on crée une variable qui contient le message d'erreur
       conn.close() #on coupe la connection
-      return render_template("/creation_compte.html", message = error) #envoie le message d'erreur vers la page HTML
+      return render_template("creation_compte.html", error = error) #envoie le message d'erreur vers la page HTML
     
     conn.commit()
     conn.close()
 
-    return "Utilisateur ajouté !"       
+    return "Utilisateur ajouté !"
+    
+@app.route("/dashboard")
+def dashboard(): #si les identifiants sont corrects on affiche cette page
+
+    if "user" in session:
+        return "Bienvenue " + session["user"]
+    else:
+        return redirect("/page0")       
 
 #fonction pour la connection depuis la page autentification
 @app.route("/login", methods=["POST"])
@@ -305,17 +312,71 @@ def generer_graphes():
     return render_template("generer_graphes.html", message=message)
 
 
-from flask import Flask, render_template
-
 @app.route('/bagues')
 def bagues():
     # Simulation de base de données
+    
     liste_bagues = [
         {"nom": "Bague Éternité", "prix": 1250, "image": "bague1.jpg"},
         {"nom": "Solitaire Royal", "prix": 3400, "image": "bague2.jpg"},
         {"nom": "Anneau Bordeaux Gold", "prix": 890, "image": "bague3.jpg"},
     ]
     return render_template('Bagues.html', categorie="Bagues", produits=liste_bagues)
+
+
+@app.route("/ajouter_panier/<int:id_produit>", methods=["POST"])
+def ajouter_panier(id_produit):
+    db = get_db()
+    produit = db.execute(
+        "SELECT id_produit, prix, nom_bijoux FROM produits WHERE id_produit = ?",
+        (id_produit,)
+    ).fetchone()
+    db.close()
+
+    if produit is None:
+        return redirect("/Liste_produits")  # Rediriger si le produit n'existe pas
+
+    if "panier" not in session:
+        session["panier"] = []
+
+    panier = session["panier"]
+    trouve = False
+
+    for article in panier:
+        if article["id_produit"] == produit["id_produit"]:
+            article["quantite"] += 1
+            trouve = True
+            break
+
+    if not trouve:
+        panier.append({
+            "id_produit": produit["id_produit"],
+            "nom_bijoux": produit["nom_bijoux"],
+            "prix": produit["prix"],
+            "quantite": 1
+        })
+
+    session["panier"] = panier
+    return redirect("/Liste_produits")
+
+@app.route("/panier")
+def panier():
+    panier = session.get("panier", [])
+
+    total = 0
+    for article in panier:
+        total += article["prix"] * article["quantite"]
+
+    return render_template("panier.html", panier=panier, total=total)
+
+@app.route("/supprimer_panier/<int:id_produit>", methods=["POST"])
+def supprimer_panier(id_produit):
+    panier = session.get("panier", [])
+
+    panier = [article for article in panier if article["id_produit"] != id_produit]
+
+    session["panier"] = panier
+    return redirect("/panier")
 
 
 if __name__ == '__main__':

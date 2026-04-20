@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('ProjetBdd.db')
+conn = sqlite3.connect('ProjetBdd1.db')
 cursor = conn.cursor()
 
 # Vérifier les tables
