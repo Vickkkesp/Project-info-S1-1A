@@ -19,10 +19,17 @@ def deconnexion():
 def creastion_compte():
     return render_template("creation_compte.html")
 
+<<<<<<< HEAD
 @app.route("Ajout_produit")
 def ajouter_produit():
     return render_template("Ajout_produit.html")
 
+=======
+@app.route("/ajouter_produit")
+def ajouter_produit():
+
+    return render_template("Ajout_produit.html")
+>>>>>>> 02513e7635b0fbb884659b902e1b6d128517a524
 
 @app.route("/admin")
 def admin():
