@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DBB_NAME = os.path.join(BASE_DIR, "ProjetBdd1.db")
+DBB_NAME = os.path.join(BASE_DIR, "bdd.db")
 GRAPHS_DIR = os.path.join(BASE_DIR, "static", "graphs")
 
 def ensure_graphs_dir():
@@ -74,14 +74,16 @@ def chiffreAffaire(mois=None, annee=None):
     print("Pas d'erreur: je suis connecte")
 
     req = """
-         SELECT vente.date_vente AS date_vente, 
-         SUM(vente.qte_vente * produits.prix) AS CA
-         FROM vente
-         JOIN produits ON vente.id_produit = produits.id_produit
-         WHERE strftime('%m',vente.date_vente)= ?
-         AND strftime('%Y',vente.date_vente)= ?
-         GROUP BY vente.date_vente
-         ORDER BY vente.date_vente;
+         SELECT commande.date_commande AS date_commande, 
+             ligne_commande.qte_commande WHERE ligne_commande.id_commande = commande.id_commande AS qte_vente,
+         SUM(commande.qte_vente * produits.prix) AS CA
+         FROM commande
+         JOIN produits ON commande.id_produit = produits.id_produit
+         JOIN commande ON commande.id_commande = commande.id_commande
+         WHERE strftime('%m',commande.date_commande)= ?
+         AND strftime('%Y',commande.date_commande)= ?
+         GROUP BY commande.date_commande
+         ORDER BY commande.date_commande;
          """
     resultat = db.execute(req,(mois,annee,)).fetchall()
     db.close()
@@ -89,9 +91,9 @@ def chiffreAffaire(mois=None, annee=None):
     X=[]
     Y=[]
     for ligne in resultat:
-            print('Date vente:',ligne["date_vente"],end='')
+            print('Date vente:',ligne["date_commande"],end='')
             print('CA:',ligne["CA"])
-            X.append(ligne["date_vente"])
+            X.append(ligne["date_commande"])
             Y.append(ligne["CA"])
         
     plt.figure(figsize=(12, 5))
@@ -143,9 +145,9 @@ def ventes_par_mois():
     ensure_graphs_dir()
     db= get_db()
     req ="""
-         SELECT strftime('%Y-%m', date_vente) AS mois,
+         SELECT strftime('%Y-%m', date_commande) AS mois,
          COUNT(*) AS nombre_ventes
-         FROM vente
+         FROM commande
          GROUP BY mois
          ORDER BY mois;
          """

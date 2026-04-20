@@ -84,7 +84,7 @@ def reconstruire_bdd():
 
     print("Remplissage des stocks et des clients...")
     
-    cursor.execute("INSERT INTO utilisateurs (nom, prenom, email, password, admin_acces) VALUES ('Assens', 'Nathan', 'nathan.assens@gmail.com', 'kk', 1)")
+    cursor.execute("INSERT INTO utilisateurs (nom, prenom, email, password, admin_acces) VALUES ('Assens', 'Nathan', 'nathan.assens@gmail.com', 'abc', 1)")
     cursor.execute("INSERT INTO utilisateurs (nom, prenom, email, password, admin_acces) VALUES ('Etudiant', 'Lucas', 'lucas@test.com', '1234', 0)")
 
     produits_fictifs = [
