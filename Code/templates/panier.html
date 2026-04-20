@@ -1,39 +1,90 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Panier</title>
-</head>
-<body>
-    <h1>Mon panier</h1>
+{% extends "base.html" %}
 
-    <a href="{{ url_for('produits') }}">Retour aux produits</a>
+{% block content %}
+<section class="panier-page">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/panier.css') }}">
+    <div class="panier-wrapper">
+     
+        <div class="panier-gauche">
+            <div class="panier-card">
+                <div class="panier-header">
+                    <h1>Mon panier</h1>
+                    <a href="/Liste_produits" class="retour-produits">Retour aux produits</a>
+                </div>
 
-    <hr>
+                <p class="nb-articles">Nombre d'articles : {{ nb_articles }}</p>
 
-    {% if panier %}
-        {% for article in panier %}
-            <div>
-                <h3>{{ article["nom"] }}</h3>
-                <p>Prix unitaire : {{ article["prix"] }} €</p>
-                <p>Quantité : {{ article["quantite"] }}</p>
-                <p>Sous-total : {{ article["prix"] * article["quantite"] }} €</p>
+                {% if lignes %}
+                    <div class="panier-liste">
+                        {% for ligne in lignes %}
+                            <div class="panier-item-colonne">
+                                <div class="panier-image">
+                                    {% if ligne["photos"] %}
+                                        <img src="{{ url_for('static', filename='images/' + ligne['photos']) }}" alt="{{ ligne['nom'] }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ ligne['nom'] }}">
+                                    {% endif %}
+                                </div>
+                                <div class="panier-infos">
+                                    <h3>{{ ligne["nom"] }}</h3>
+                                    <p class="prix-unitaire">{{ ligne["prix"] }} €</p>
+                                    <p class="stock">En stock : {{ ligne["stock"] }}</p>
+                                    <p class="sous-total">Sous-total : {{ ligne["sous_total"] }} €</p>
+                                    <div class="quantite-actions">
+                                        <div class="quantite-box">
+                                            <form action="/panier/diminuer/{{ ligne['id_ligne_panier'] }}" method="POST">
+                                                <button type="submit">−</button>
+                                            </form>
+                                            <span>{{ ligne["quantite"] }}</span>
+                                            <form action="/panier/augmenter/{{ ligne['id_ligne_panier'] }}" method="POST">
+                                                <button type="submit">+</button>
+                                            </form>
+                                        </div>
+                                        <form action="/panier/supprimer/{{ ligne['id_ligne_panier'] }}" method="POST" class="supprimer-form">
+                                            <button type="submit" class="btn-lien">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
 
-                <form action="{{ url_for('supprimer_panier', id_produit=article['id_produit']) }}" method="POST">
-                    <button type="submit">Supprimer</button>
-                </form>
+                    <div class="panier-bas">
+                        <form action="/panier/vider" method="POST">
+                            <button type="submit" class="btn-secondaire">Vider le panier</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="panier-vide">
+                        <p>Le panier est vide.</p>
+                        <a href="/Liste_produits" class="btn-principal">Découvrir nos produits</a>
+                    </div>
+                {% endif %}
             </div>
-            <hr>
-        {% endfor %}
+        </div>
 
-        <h2>Total : {{ total }} €</h2>
+        <div class="panier-droite">
+            <div class="resume-card">
+                <h2>Résumé</h2>
+                <p class="resume-ligne">
+                    <span>Articles</span>
+                    <span>{{ nb_articles }}</span>
+                </p>
+                <p class="resume-ligne total">
+                    <span>Total</span>
+                    <span>{{ total }} €</span>
+                </p>
 
-        <form action="{{ url_for('vider_panier') }}" method="POST">
-            <button type="submit">Vider le panier</button>
-        </form>
+                {% if lignes %}
+                    <form action="/panier/valider" method="POST">
+                        <button type="submit" class="btn-commander">Passer la commande</button>
+                    </form>
+                {% else %}
+                    <button type="button" class="btn-commander disabled" disabled>Passer la commande</button>
+                {% endif %}
+            </div>
+        </div>
 
-    {% else %}
-        <p>Le panier est vide.</p>
-    {% endif %}
-</body>
-</html>
+    </div>
+</section>
+{% endblock %}

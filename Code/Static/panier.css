@@ -1,0 +1,297 @@
+/* Affichage en colonne pour chaque produit du panier */
+.panier-item-colonne {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 0;
+    border-top: 1px solid #e2d7c5;
+    background: #fffdf8;
+    border-radius: 14px;
+    margin-bottom: 12px;
+}
+.panier-page {
+    background-color: #f6f4ea;
+    padding: 40px 30px 60px;
+    min-height: 70vh;
+}
+
+.panier-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2.3fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.panier-card,
+.resume-card {
+    background: #fffdf8;
+    border: 1px solid #c7b9a3;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(70, 40, 20, 0.08);
+}
+
+.panier-card {
+    padding: 28px;
+}
+
+.resume-card {
+    padding: 24px;
+    position: sticky;
+    top: 30px;
+}
+
+.panier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.panier-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    color: #1f1a17;
+}
+
+.retour-produits {
+    color: #7b1e2b;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.retour-produits:hover {
+    text-decoration: underline;
+}
+
+.nb-articles {
+    color: #5c554c;
+    margin-bottom: 26px;
+    font-size: 1rem;
+}
+
+.panier-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+
+.panier-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9f6ef;
+    border: 1px solid #e2d7c5;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.panier-image img {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+}
+
+.panier-infos h3 {
+    margin: 0 0 10px;
+    font-size: 1.25rem;
+    color: #201915;
+    line-height: 1.35;
+}
+
+.prix-unitaire {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #7b1e2b;
+    margin: 0 0 8px;
+}
+
+.stock {
+    margin: 0 0 8px;
+    color: #2f7a42;
+    font-weight: 500;
+}
+
+.sous-total {
+    margin: 0 0 16px;
+    color: #3b3129;
+    font-weight: 600;
+}
+
+.quantite-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.quantite-box {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #bfa98d;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.quantite-box form {
+    margin: 0;
+}
+
+.quantite-box button {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: #f2ebdf;
+    color: #3c2b22;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.quantite-box button:hover {
+    background: #e7dac3;
+}
+
+.quantite-box span {
+    min-width: 48px;
+    text-align: center;
+    font-weight: 700;
+    color: #2e241d;
+}
+
+.btn-lien {
+    border: none;
+    background: none;
+    color: #7b1e2b;
+    cursor: pointer;
+    font-size: 0.98rem;
+    padding: 0;
+}
+
+.btn-lien:hover {
+    text-decoration: underline;
+}
+
+.panier-bas {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #e2d7c5;
+}
+
+.btn-secondaire,
+.btn-principal,
+.btn-commander {
+    border: none;
+    border-radius: 999px;
+    padding: 13px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.2s ease, background 0.2s ease;
+}
+
+.btn-secondaire {
+    background: #ede4d4;
+    color: #4a3528;
+}
+
+.btn-secondaire:hover {
+    background: #e2d4bc;
+}
+
+.btn-principal,
+.btn-commander {
+    background: #7b1e2b;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-principal:hover,
+.btn-commander:hover {
+    background: #631722;
+    transform: translateY(-1px);
+}
+
+.btn-commander {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.btn-commander.disabled {
+    background: #b9aea2;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.resume-card h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    color: #211914;
+    font-size: 1.4rem;
+}
+
+.resume-ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    color: #4a4138;
+}
+
+.resume-ligne.total {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e2d7c5;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f1a17;
+}
+
+.panier-vide {
+    padding: 30px 0 10px;
+}
+
+.panier-vide p {
+    font-size: 1.1rem;
+    color: #4f463e;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 980px) {
+    .panier-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .resume-card {
+        position: static;
+    }
+}
+
+@media (max-width: 700px) {
+    .panier-page {
+        padding: 25px 15px 40px;
+    }
+
+    .panier-card,
+    .resume-card {
+        padding: 18px;
+    }
+
+    .panier-item {
+        grid-template-columns: 1fr;
+    }
+
+    .panier-image {
+        max-width: 220px;
+    }
+
+    .panier-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

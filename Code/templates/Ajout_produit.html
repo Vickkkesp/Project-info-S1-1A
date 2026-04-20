@@ -1,55 +1,69 @@
 {% extends "base.html" %}
 
-{% set titre = "Ajout Produit" %}
+{% set titre = "Gestion de l'Atelier - Ajout" %}
 
 {% block content %}
-<h1>Entrez le produit à ajouter</h1>
+<main class="admin-wrapper">
+    <div class="admin-card">
+        <header class="admin-header">
+            <div class="ornament">✧</div>
+            <h1>Nouvelle Création</h1>
+            <p class="subtitle">Enregistrement dans l'inventaire de la Maison</p>
+        </header>
 
-{% if error %}
-    <p style="color:red;">{{ error }}</p>
-{% endif %}
+        {% if error %}
+            <div class="error-box">{{ error }}</div>
+        {% endif %}
 
-<form method="POST" action="/ajouter_produit" >
-    <label for="Type">Type de Bijoux</label><br>
-    <select name ="Type" id = "Type" required>
-        <option value = "bague">bague</option>
-        <option value = "bracelet">bracelet</option>
-        <option value = "collier">collier</option>
-    </select><br><br>
+        <form method="POST" action="/ajouter_produit" class="luxury-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Type">Type de Bijou</label>
+                    <select name="Type" id="Type" required>
+                        <option value="bague">Bague</option>
+                        <option value="boucles d'oreilles">Boucles d'oreilles</option>
+                        <option value="collier">Collier</option>
+                        <option value="montre">Montre</option>
+                    </select>
+                </div>
 
-    <label for="Genre">Genre</label><br>
-    <select name ="Genre" id = "Genre">
-        <option value = "Homme">Homme</option>
-        <option value = "Femme">Femme</option>
-        <option value = "NonPrecise">Non précisé</option>
-    </select><br><br>
+                <div class="form-group">
+                    <label for="Matiere">Métal Précieux</label>
+                    <select name="Matiere" id="Matiere" required>
+                        <option value="or">Or</option>
+                        <option value="argent">Argent</option>
+                    </select>
+                </div>
+            </div>
 
-    <label for="Prix">Prix de vente</label><br>
-        <input type = "text" id = "Prix" name = "Prix" required><br><br>
+            <div class="form-group">
+                <label for="Nom_Bijoux">Nom de la pièce</label>
+                <input type="text" id="Nom_Bijoux" name="Nom_Bijoux" placeholder="ex: Solitaire Éclat Éternel" required>
+            </div>
 
-    <label for="Nom_bijoux">Nom du bijoux</label><br>
-        <input type="text" id="Nom_Bijoux" name="Nom_Bijoux" required><br><br>  
-        
-    <label for="Matiere">Type de Bijoux</label><br>
-    <select name ="Matiere" id = "MAtiere" required>
-        <option value = "or">or</option>
-        <option value = "argent">argent</option>
-    </select><br><br>
-    
-    <button type = "submit">Ajouter</button>
-</form>
+            <div class="form-group">
+                <label for="Prix">Prix de vente (€)</label>
+                <input type="text" id="Prix" name="Prix" placeholder="ex: 1250" required>
+            </div>
 
-<h2><a href="/Liste_produits">Retour à la liste</a></h2>
-<h2><a href="/admin">Retour à la page admin</a></h2>
+            <button type="submit" class="btn-admin">Inscrire à la collection</button>
+        </form>
+
+        <nav class="admin-nav">
+            <a href="/Liste_produits">Consulter la liste</a>
+            <span class="sep">|</span>
+            <a href="/admin">Tableau de bord</a>
+        </nav>
+    </div>
+</main>
 {% endblock %}
 
 {% block footer %}
-<p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
-<p>Expertise . Élégance . Tradition</p>
-<div style="margin-top: 50px; padding-bottom: 30px;">
-    <img src="{{ url_for('static', filename='images/logolivraison.png') }}" width="600">
+<div class="footer-admin">
+    <p>&copy; 2026 Maison Luxe - Joaillerie Fine</p>
+    <p class="slogan">Expertise . Élégance . Tradition</p>
+    <div class="footer-logo">
+        <img src="{{ url_for('static', filename='images/logolivraison.png') }}" alt="Logo Livraison">
+    </div>
 </div>
 {% endblock %}
-</footer>
-</body>
-</html>

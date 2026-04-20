@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 
-DBB_NAME = "ProjetBdd1.db"
-GRAPHS_DIR = "static/graphs"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DBB_NAME = os.path.join(BASE_DIR, "ProjetBdd1.db")
+GRAPHS_DIR = os.path.join(BASE_DIR, "static", "graphs")
 
 def ensure_graphs_dir():
     """Créer le dossier graphs s'il n'existe pas"""
@@ -37,7 +38,9 @@ def init_db():
             type_bijoux TEXT,
             genre TEXT,
             prix REAL,
-            nom_bijoux TEXT UNIQUE
+            nom_bijoux TEXT UNIQUE,
+            image TEXT,
+            stock INTEGER DEFAULT 0
         )
     """)
     
@@ -52,7 +55,81 @@ def init_db():
             FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
         )
     """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS panier (
+            id_panier INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER UNIQUE,
+            FOREIGN KEY(id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ligne_panier (
+            id_ligne_panier INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_panier INTEGER,
+            id_produit INTEGER,
+            quantite INTEGER NOT NULL,
+            FOREIGN KEY(id_panier) REFERENCES panier(id_panier),
+            FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS commande (
+            id_commande INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER,
+            total REAL,
+            date_commande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ligne_commande (
+            id_ligne_commande INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_commande INTEGER,
+            id_produit INTEGER,
+            quantite INTEGER,
+            prix_unitaire REAL,
+            FOREIGN KEY(id_commande) REFERENCES commande(id_commande),
+            FOREIGN KEY(id_produit) REFERENCES produits(id_produit)
+        )
+    """)
     
+    # Ajouter les colonnes manquantes si elles n'existent pas dans une ancienne base
+    existing_columns = [row[1] for row in conn.execute("PRAGMA table_info(produits)")]
+    if "type_bijoux" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN type_bijoux TEXT")
+    if "genre" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN genre TEXT")
+    if "prix" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN prix REAL")
+    if "nom_bijoux" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN nom_bijoux TEXT UNIQUE")
+    if "stock" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN stock INTEGER DEFAULT 0")
+    if "image" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN image TEXT")
+    if "description" not in existing_columns:
+        conn.execute("ALTER TABLE produits ADD COLUMN description TEXT")
+
+    # Insérer des produits de test s'il n'en existe pas
+    count = conn.execute("SELECT COUNT(*) FROM produits").fetchone()[0]
+    if count == 0:
+        cursor.execute("""
+            INSERT INTO produits (type_bijoux, genre, prix, nom_bijoux, image, stock, description) VALUES
+            ('Bague', 'Femme', 1200.00, 'Alliance Éclat', 'bague2.jpg', 10, 'Élégante alliance en or blanc avec diamant'),
+            ('Bague', 'Femme', 2500.00, 'Solitaire Impérial', 'bague2.jpg', 8, 'Solitaire prestigieux en platine'),
+            ('Bague', 'Homme', 950.00, 'Chevalière Or', 'bague2.jpg', 15, 'Chevalière classique en or massif'),
+            ('Collier', 'Femme', 1800.00, 'Rivière d''Argent', 'collier.jpg', 12, 'Collier rivière en argent 925'),
+            ('Collier', 'Femme', 3200.00, 'Sautoir Perles', 'collier.jpg', 7, 'Sautoir élégant avec perles de culture'),
+            ('Montre', 'Femme', 4500.00, 'Chronographe Bordeaux', 'photo-montre.webp', 5, 'Chronographe suisse automatic'),
+            ('Montre', 'Homme', 7800.00, 'L''Automatique Or', 'photo-montre.webp', 3, 'Montre automatique en or 18 carats'),
+            ('Boucles', 'Femme', 450.00, 'Boucles Perles', 'photo boucle.avif', 20, 'Boucles d''oreilles perles de culture'),
+            ('Boucles', 'Femme', 650.00, 'Boucles Diamant', 'photo boucle.avif', 14, 'Boucles d''oreilles diamants certifiés')
+        """)
+
     conn.commit()
     conn.close()
 

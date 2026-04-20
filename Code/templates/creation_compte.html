@@ -1,35 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="text-align: center; padding-top: 50px;">
-    <h1>Créer un compte</h1>
+<main class="page-wrapper">
+    <div class="luxury-card">
+        <div class="ornament">✦</div>
+        <h1>Créer un compte</h1>
 
-    {% if message %}
-        <p style="color:red;">{{ message }}</p>
-    {% endif %}
+        {% if message %}
+            <p class="error-message">{{ message }}</p>
+        {% endif %}
 
-    <form method="POST" action="/ajouter_utilisateur" style="max-width: 400px; margin: 0 auto;">
-        <label for="prenom">Prénom :</label><br>
-        <input type="text" id="prenom" name="prenom" required><br><br>
+        <form method="POST" action="/ajouter_utilisateur" class="auth-form">
+            <div class="form-group">
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom" required>
+            </div>
 
-        <label for="nom">Nom :</label><br>
-        <input type="text" id="nom" name="nom" required><br><br>
+            <div class="form-group">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" required>
+            </div>
 
-        <label for="email">Email :</label><br>
-        <input type="text" id="email" name="email" required><br><br>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-        <label for="password">Mot de passe :</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-        <label for="telephone">Numéro de téléphone :</label><br>
-        <input type="text" id="telephone" name="telephone" required><br><br>
+            <div class="form-group">
+                <label for="telephone">Numéro de téléphone</label>
+                <input type="text" id="telephone" name="telephone" required>
+            </div>
 
-        <button type="submit">Créer le compte</button>
-    </form>
+            <button type="submit" class="btn-submit">Créer mon compte</button>
+        </form>
 
-    <br>
-    <a href="/">Retour à l'accueil</a>
-    <br><br>
-    <a href="/page02">Déjà un compte ? Se connecter</a>
-</div>
+        <div class="form-footer">
+            <a href="/autentification" class="link-login">Déjà un compte ? Se connecter</a>
+            <a href="/" class="link-home">Retour à l'accueil</a>
+        </div>
+    </div>
+</main>
 {% endblock %}

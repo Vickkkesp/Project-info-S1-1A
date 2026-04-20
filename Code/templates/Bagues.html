@@ -5,12 +5,25 @@
         <h1>Nos Bagues d'Exception</h1>
     </section>
 
-    <div class="product-grid">
+    <div class="produits-grid">
         {% for p in produits %}
-            <div class="product-card">
-                <h3>{{ p.nom }}</h3>
-                <p>{{ p.prix }} €</p>
-            </div>
+        <center>
+            <a href="{{ url_for('fiche_produit', id_produit=p.id_produit) }}" class="produit-card">
+                <div class="produit-image-box">
+                    {% if p.photos %}
+                        <img src="{{ url_for('static', filename='images/' + p.photos) }}" alt="{{ p.nom_bijoux }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ p.nom_bijoux }}">
+                    {% endif %}
+                </div>
+                <div class="produit-info">
+                    <p class="produit-prix">{{ "%.2f"|format(p.prix) }} €</p>
+                    <h3 class="produit-nom">{{ p.nom_bijoux }}</h3>
+                    <p class="description">{{ p.description }}</p>
+                    <p class="stock">Stock: {{ p.stock }}</p>
+                </div>
+            </a>
+        </center>
         {% endfor %}
     </div>
 {% endblock %}
