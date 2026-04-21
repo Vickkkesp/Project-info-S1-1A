@@ -10,7 +10,7 @@
             {% for ligne in lignes %}
             <div class="panier-item">
                 <div class="item-image">
-                    <img src="{{ url_for('static', filename='Images/' ~ ligne.id_produit ~ '.png') }}" alt="{{ ligne.nom }}">
+                    <img src="{{ url_for('static', filename='Images/produits/' ~ ligne.id_produit ~ '.jpg') }}" alt="{{ ligne.nom }}">
                 </div>
                 <div class="item-details">
                     <h3>{{ ligne.nom }}</h3>

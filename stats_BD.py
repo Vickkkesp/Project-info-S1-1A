@@ -38,22 +38,28 @@ def graphique_utilisateurs():
     users_per_month = [int(total_users * (i+1) / 12) for i in range(12)]
     
     # Créer le graphe avec une courbe croissante
-    plt.figure(figsize=(12, 5))
+    plt.figure(figsize=(12, 5), facecolor='#f8f6f2')
+    plt.rcParams['font.family'] = 'serif'
+    gold = '#C9B037'
+    blue = '#1a2238'
+    accent = '#e6b400'
     if total_users > 0:
-        plt.plot(months, users_per_month, marker='o', linewidth=2.5, markersize=8, color='steelblue', label='Croissance')
-        plt.fill_between(range(len(months)), users_per_month, alpha=0.3, color='steelblue')
-        plt.ylabel("Nombre d'utilisateurs")
-        plt.title(f"Croissance du nombre d'utilisateurs inscrits (Total: {total_users})")
-        plt.grid(True, alpha=0.3)
-        plt.legend()
+        plt.plot(months, users_per_month, marker='o', linewidth=3, markersize=10, color=gold, label='Croissance')
+        plt.fill_between(range(len(months)), users_per_month, alpha=0.15, color=gold)
+        plt.ylabel("Nombre d'utilisateurs", fontsize=13, fontweight='bold', color=blue)
+        plt.title(f"Croissance du nombre d'utilisateurs inscrits (Total: {total_users})", fontsize=15, fontweight='bold', color=blue, pad=15)
+        plt.grid(True, alpha=0.2, color=blue)
+        plt.legend(facecolor='#fffbe6', edgecolor=gold, fontsize=12)
     else:
-        plt.text(0.5, 0.5, 'Aucun utilisateur', ha='center', va='center', transform=plt.gca().transAxes)
-        plt.title("Croissance du nombre d'utilisateurs inscrits")
-    
-    plt.xlabel('Mois')
+        plt.text(0.5, 0.5, 'Aucun utilisateur', ha='center', va='center', fontsize=16, color=blue, transform=plt.gca().transAxes)
+        plt.title("Croissance du nombre d'utilisateurs inscrits", fontsize=15, fontweight='bold', color=blue, pad=15)
+    plt.xlabel('Mois', fontsize=13, fontweight='bold', color=blue)
+    plt.gca().spines['top'].set_visible(False)
+    plt.gca().spines['right'].set_visible(False)
+    plt.gca().spines['left'].set_color(blue)
+    plt.gca().spines['bottom'].set_color(blue)
     plt.tight_layout()
-
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_utilisateurs.png"), dpi=100, bbox_inches='tight')
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_utilisateurs.png"), dpi=120, bbox_inches='tight', facecolor='#f8f6f2')
     plt.close()
 
     #faire des graphes pour des nombre de ventes par mois, chiffre d'affaires par mois, nombre d'utilisateurs, distribution de produits, 
@@ -96,18 +102,26 @@ def chiffreAffaire(mois=None, annee=None):
             X.append(ligne["date_commande"])
             Y.append(ligne["CA"])
         
-    plt.figure(figsize=(12, 5))
+    plt.figure(figsize=(12, 5), facecolor='#f8f6f2')
+    plt.rcParams['font.family'] = 'serif'
+    gold = '#C9B037'
+    blue = '#1a2238'
+    accent = '#e6b400'
     if X and Y:
-        plt.bar(X, Y, color='steelblue')
+        plt.bar(X, Y, color=gold, edgecolor=blue, linewidth=1.5, alpha=0.85)
     else:
-        plt.text(0.5, 0.5, f'Aucune donnée pour {mois}/{annee}', ha='center', va='center', transform=plt.gca().transAxes)
-    plt.xlabel('Jour')
-    plt.ylabel('Chiffre Affaire (€)')
-    plt.title(f'Chiffre Affaire du mois de {mois}/{annee}')
-    plt.xticks(rotation=45)
-
+        plt.text(0.5, 0.5, f'Aucune donnée pour {mois}/{annee}', ha='center', va='center', fontsize=16, color=blue, transform=plt.gca().transAxes)
+    plt.xlabel('Jour', fontsize=13, fontweight='bold', color=blue)
+    plt.ylabel('Chiffre Affaire (€)', fontsize=13, fontweight='bold', color=blue)
+    plt.title(f'Chiffre Affaire du mois de {mois}/{annee}', fontsize=15, fontweight='bold', color=blue, pad=15)
+    plt.xticks(rotation=45, color=blue)
+    plt.yticks(color=blue)
+    plt.gca().spines['top'].set_visible(False)
+    plt.gca().spines['right'].set_visible(False)
+    plt.gca().spines['left'].set_color(blue)
+    plt.gca().spines['bottom'].set_color(blue)
     plt.tight_layout()
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_chiffre_affaire.png"), dpi=100, bbox_inches='tight')
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_chiffre_affaire.png"), dpi=120, bbox_inches='tight', facecolor='#f8f6f2')
     plt.close()
 
 
@@ -133,12 +147,17 @@ def distribution_produits():
             X.append(ligne["type_bijoux"])
             Y.append(ligne["nombre_produits"])
 
-    plt.figure()
-    plt.pie(Y, labels=X, autopct='%1.1f%%')   
-    plt.title('Distribution du type de produits')
-
+    plt.figure(figsize=(8, 8), facecolor='#f8f6f2')
+    plt.rcParams['font.family'] = 'serif'
+    gold = '#C9B037'
+    blue = '#1a2238'
+    accent = '#e6b400'
+    colors = [gold, blue, accent, '#fffbe6', '#b4b4b4']
+    wedges, texts, autotexts = plt.pie(Y, labels=X, autopct='%1.1f%%', colors=colors[:len(X)], startangle=140, textprops={'fontsize': 13, 'color': blue})
+    plt.setp(autotexts, size=13, weight='bold', color=gold)
+    plt.title('Distribution du type de produits', fontsize=15, fontweight='bold', color=blue, pad=15)
     plt.tight_layout()
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_distribution_produits.png"))
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_distribution_produits.png"), dpi=120, bbox_inches='tight', facecolor='#f8f6f2')
     plt.close()
 
 def ventes_par_mois():
@@ -164,31 +183,26 @@ def ventes_par_mois():
             Y.append(ligne["nombre_ventes"])
 
     # Créer une figure plus grande pour mieux espacer les éléments
-    plt.figure(figsize=(16, 8))
-    
-    # Créer le graphique en barres avec une couleur plus visible
-    bars = plt.bar(X, Y, color='skyblue', edgecolor='navy', linewidth=1, alpha=0.7)
-    
-    # Améliorer les labels des axes
-    plt.xlabel('Mois (YYYY-MM)', fontsize=12, fontweight='bold')
-    plt.ylabel('Nombre de ventes', fontsize=12, fontweight='bold')
-    plt.title('Évolution du nombre de ventes par mois', fontsize=14, fontweight='bold', pad=20)
-    
-    # Améliorer l'affichage des dates sur l'axe X
-    plt.xticks(rotation=45, ha='right', fontsize=10)
-    
-    # Ajouter une grille pour faciliter la lecture
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    
-    # Ajouter les valeurs sur les barres si elles ne sont pas trop nombreuses
-    if len(X) <= 20:  # Seulement si pas trop de barres pour éviter l'encombrement
+    plt.figure(figsize=(14, 7), facecolor='#f8f6f2')
+    plt.rcParams['font.family'] = 'serif'
+    gold = '#C9B037'
+    blue = '#1a2238'
+    accent = '#e6b400'
+    bars = plt.bar(X, Y, color=blue, edgecolor=gold, linewidth=2, alpha=0.85)
+    plt.xlabel('Mois (YYYY-MM)', fontsize=13, fontweight='bold', color=blue)
+    plt.ylabel('Nombre de ventes', fontsize=13, fontweight='bold', color=blue)
+    plt.title('Évolution du nombre de ventes par mois', fontsize=15, fontweight='bold', color=blue, pad=20)
+    plt.xticks(rotation=45, ha='right', fontsize=11, color=blue)
+    plt.yticks(color=blue)
+    plt.gca().spines['top'].set_visible(False)
+    plt.gca().spines['right'].set_visible(False)
+    plt.gca().spines['left'].set_color(gold)
+    plt.gca().spines['bottom'].set_color(gold)
+    plt.grid(axis='y', linestyle='--', alpha=0.3, color=gold)
+    if len(X) <= 20:
         for bar, valeur in zip(bars, Y):
             plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1, 
-                    str(valeur), ha='center', va='bottom', fontsize=9, fontweight='bold')
-    
-    # Ajuster les marges pour que tout soit visible
+                    str(valeur), ha='center', va='bottom', fontsize=10, fontweight='bold', color=gold)
     plt.tight_layout()
-    
-    # Sauvegarder avec une meilleure qualité
-    plt.savefig(os.path.join(GRAPHS_DIR, "graph_ventes_par_mois.png"), dpi=150, bbox_inches='tight')
+    plt.savefig(os.path.join(GRAPHS_DIR, "graph_ventes_par_mois.png"), dpi=120, bbox_inches='tight', facecolor='#f8f6f2')
     plt.close()
