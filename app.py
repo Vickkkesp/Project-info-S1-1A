@@ -19,12 +19,6 @@ def deconnexion():
 def creastion_compte():
     return render_template("creation_compte.html")
 
-<<<<<<< HEAD
-@app.route("/ajouter_produit")
-def ajouter_produit():
-
-    return render_template("Ajout_produit.html")
-=======
 @app.route("/ajouter_produit", methods=["GET", "POST"])
 def ajouter_produit():
     error = None
@@ -52,7 +46,6 @@ def ajouter_produit():
             error = f"Erreur lors de l'ajout : {e}"
             return render_template("Ajout_produit.html", error=error)
     return render_template("Ajout_produit.html", error=error)
->>>>>>> 22bb11401799eac7c41f66a92758512b1a1cc013
 
 @app.route("/admin")
 def admin():
