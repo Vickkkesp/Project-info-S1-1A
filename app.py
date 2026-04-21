@@ -29,18 +29,22 @@ def ajouter_produit():
         prix = request.form.get("Prix")
         try:
             prix = float(prix)
-        except Exception:
+        except (ValueError, TypeError):
             error = "Le prix doit être un nombre."
-        if not error:
-            try:
-                db = connexion()
-                db.execute("INSERT INTO produits (type_bijoux, matiere, nom_bijoux, prix, stock) VALUES (?, ?, ?, ?, ?)",
-                           (type_bijoux, matiere, nom_bijoux, prix, 10))
-                db.commit()
-                db.close()
-                return redirect("/admin")
-            except Exception as e:
-                error = f"Erreur lors de l'ajout : {e}"
+            return render_template("Ajout_produit.html", error=error)
+        try:
+            conn = connexion()
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO produits (type_bijoux, matiere, nom_bijoux, prix, stock) VALUES (?, ?, ?, ?, ?)",
+                (type_bijoux, matiere, nom_bijoux, prix, 10)  # Stock par défaut à 10
+            )
+            conn.commit()
+            conn.close()
+            return redirect("/admin")
+        except Exception as e:
+            error = f"Erreur lors de l'ajout : {e}"
+            return render_template("Ajout_produit.html", error=error)
     return render_template("Ajout_produit.html", error=error)
 
 @app.route("/admin")
