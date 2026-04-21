@@ -181,32 +181,31 @@ def generer_graphes():
     
     if request.method == "POST":
         type_graphe = request.form.get("type_graphe")
-        
         try:
             if type_graphe == "utilisateurs":
-                graphique_utilisateurs()
-                message = "Graphe des utilisateurs généré avec succès!"
+                mois = request.form.get("mois_utilisateurs")
+                annee = request.form.get("annee_utilisateurs")
+                graphique_utilisateurs(mois, annee)
+                message = f"Graphe des utilisateurs généré pour {mois or 'tous les mois'}/{annee or 'toutes les années'} !"
             elif type_graphe == "chiffre_affaire":
                 mois = request.form.get("mois")
                 annee = request.form.get("annee")
-                if mois and annee:
-                    chiffreAffaire(mois, annee)
-                    message = f"Graphe du chiffre d'affaire pour {mois}/{annee} généré avec succès!"
-                else:
-                    message = "Veuillez entrer le mois et l'année!"
+                chiffreAffaire(mois, annee)
+                message = f"Graphe du chiffre d'affaire pour {mois or 'tous les mois'}/{annee or 'toutes les années'} généré avec succès!"
             elif type_graphe == "distribution":
                 distribution_produits()
                 message = "Graphe de distribution des produits généré avec succès!"
             elif type_graphe == "ventes":
-                ventes_par_mois()
-                message = "Graphe des ventes par mois généré avec succès!"
+                mois = request.form.get("mois_ventes")
+                annee = request.form.get("annee_ventes")
+                ventes_par_mois(mois, annee)
+                message = f"Graphe des ventes généré pour {mois or 'tous les mois'}/{annee or 'toutes les années'} !"
             else:
                 message = "Type de graphe invalide!"
         except Exception as e:
             message = f"Erreur lors de la génération du graphe: {str(e)}"
     else:
         message = ""
-    
     return render_template("generer_graphes.html", message=message)
 
 
