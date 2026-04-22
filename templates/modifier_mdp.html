@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="modifier-mdp-container" style="max-width: 400px; margin: 40px auto; padding: 32px; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(185,147,91,0.08);">
+    <h2 style="text-align:center; color: #b5935b; margin-bottom: 24px;">Modifier mon mot de passe</h2>
+    {% if error %}
+        <div class="error-box" style="margin-bottom: 16px;">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+        <div class="success-box" style="margin-bottom: 16px;">{{ success }}</div>
+    {% endif %}
+    <form method="POST">
+        <div class="form-group">
+            <label for="ancien_mdp">Ancien mot de passe</label>
+            <input type="password" id="ancien_mdp" name="ancien_mdp" required>
+        </div>
+        <div class="form-group">
+            <label for="nouveau_mdp">Nouveau mot de passe</label>
+            <input type="password" id="nouveau_mdp" name="nouveau_mdp" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmer_mdp">Confirmer le nouveau mot de passe</label>
+            <input type="password" id="confirmer_mdp" name="confirmer_mdp" required>
+        </div>
+        <button type="submit" class="btn-luxe" style="width:100%;margin-top:18px;">Valider</button>
+    </form>
+</div>
+{% endblock %}

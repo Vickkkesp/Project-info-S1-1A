@@ -15,7 +15,7 @@
             <div class="error-box">{{ error }}</div>
         {% endif %}
 
-        <form method="POST" action="/ajouter_produit" class="luxury-form">
+        <form method="POST" action="/ajouter_produit" class="luxury-form" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group">
                     <label for="Type">Type de Bijou</label>
@@ -53,8 +53,16 @@
                 <label for="Prix">Prix de vente (€)</label>
                 <input type="text" id="Prix" name="Prix" placeholder="ex: 1250" required>
             </div>
+            <div class="form-group">
+                <label for="image">Image du produit</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
             <button type="submit" class="btn-admin">Inscrire à la collection</button>
             
+        </form>
+
+        <form method="GET" action="/produits/Bagues">
+            <button type="submit" class="btn-supprimer" style="margin-top: 20px;">Supprimer un produit</button>
         </form>
 
         <nav class="admin-nav">

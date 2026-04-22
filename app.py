@@ -22,11 +22,13 @@ def creastion_compte():
 @app.route("/ajouter_produit", methods=["GET", "POST"])
 def ajouter_produit():
     error = None
+    import os
     if request.method == "POST":
         type_bijoux = request.form.get("Type")
         matiere = request.form.get("Matiere")
         nom_bijoux = request.form.get("Nom_Bijoux")
         prix = request.form.get("Prix")
+        image = request.files.get("image")
         try:
             prix = float(prix)
         except (ValueError, TypeError):
@@ -35,17 +37,48 @@ def ajouter_produit():
         try:
             conn = connexion()
             cursor = conn.cursor()
+            # Ajout du produit sans image d'abord
             cursor.execute(
                 "INSERT INTO produits (type_bijoux, matiere, nom_bijoux, prix, stock) VALUES (?, ?, ?, ?, ?)",
-                (type_bijoux, matiere, nom_bijoux, prix, 10)  # Stock par défaut à 10
+                (type_bijoux, matiere, nom_bijoux, prix, 10)
             )
+            id_produit = cursor.lastrowid
             conn.commit()
             conn.close()
+
+            # Sauvegarde de l'image
+            if image:
+                ext = os.path.splitext(image.filename)[1].lower()
+                if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+                    error = "Format d'image non supporté."
+                    return render_template("Ajout_produit.html", error=error)
+                image_path = os.path.join("static", "Images", "produits", f"{id_produit}.jpg")
+                image.save(image_path)
+
             return redirect("/admin")
         except Exception as e:
             error = f"Erreur lors de l'ajout : {e}"
             return render_template("Ajout_produit.html", error=error)
     return render_template("Ajout_produit.html", error=error)
+
+@app.route("/produits/supprimer/<int:id_produit>", methods=["POST"])
+def supprimer_produit(id_produit):
+    if not session.get("is_admin"):
+        return redirect("/login")
+    import os
+    try:
+        conn = connexion()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM produits WHERE id_produit = ?", (id_produit,))
+        conn.commit()
+        conn.close()
+        # Supprimer l'image associée
+        image_path = os.path.join("static", "Images", "produits", f"{id_produit}.jpg")
+        if os.path.exists(image_path):
+            os.remove(image_path)
+    except Exception as e:
+        flash(f"Erreur lors de la suppression : {e}", "error")
+    return redirect(request.referrer or "/admin")
 
 @app.route("/admin")
 def admin():
@@ -439,6 +472,39 @@ def confirmation(id_commande):
                            id_commande=id_commande, 
                            date_livraison=date_formattee)
 
+
+@app.route("/modifier_mdp", methods=["GET", "POST"])
+def modifier_mdp():
+    if "id_utilisateur" not in session:
+        return redirect("/login")
+    error = None
+    success = None
+    if request.method == "POST":
+        ancien_mdp = request.form.get("ancien_mdp")
+        nouveau_mdp = request.form.get("nouveau_mdp")
+        confirmer_mdp = request.form.get("confirmer_mdp")
+        if not ancien_mdp or not nouveau_mdp or not confirmer_mdp:
+            error = "Tous les champs sont obligatoires."
+        elif nouveau_mdp != confirmer_mdp:
+            error = "Les nouveaux mots de passe ne correspondent pas."
+        else:
+            conn = connexion()
+            cursor = conn.cursor()
+            utilisateur = cursor.execute(
+                "SELECT * FROM utilisateurs WHERE id_utilisateur = ? AND password = ?",
+                (session["id_utilisateur"], ancien_mdp)
+            ).fetchone()
+            if not utilisateur:
+                error = "Ancien mot de passe incorrect."
+            else:
+                cursor.execute(
+                    "UPDATE utilisateurs SET password = ? WHERE id_utilisateur = ?",
+                    (nouveau_mdp, session["id_utilisateur"])
+                )
+                conn.commit()
+                success = "Mot de passe modifié avec succès."
+            conn.close()
+    return render_template("modifier_mdp.html", error=error, success=success)
 
 if __name__ == '__main__':
  app.run(debug=True)
