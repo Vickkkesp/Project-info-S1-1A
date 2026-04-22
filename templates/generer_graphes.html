@@ -1,146 +1,46 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générer des Graphes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            font-family: 'Bodoni MT';
-            color: #333;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
-        }
-        select, input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: hsl(0, 28%, 14%);
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-        }
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-generate {
-            font-family: 'Bodoni MT';
-            background-color: hsl(0, 64%, 30%);
-            color: white;
-        }
-        .btn-generate:hover {
-            font-family: 'Bodoni MT';
-            background-color: #682525;
-        }
-        .btn-back {
-            font-family: 'Bodoni MT';
-            background-color: #666;
-            color: white;
-        }
-        .btn-back:hover {
-            font-family: 'Bodoni MT';
-            background-color: #555;
-        }
-        .message {
-            font-family: 'Bodoni MT';
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .message.success {
-            font-family: 'Bodoni MT';
-            background-color: #d4edda;
-            color: #1a3320;
-            border: 1px solid #c3e6cb;
-        }
-        .message.error {
-            font-family: 'Bodoni MT';
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .info {
-            font-family: 'Bodoni MT';
-            background-color: #e7f3ff;
-            padding: 10px;
-            border-left: 4px solid hsl(41, 35%, 63%);
-            margin-top: 15px;
-            font-size: 13px;
-            color: hsl(9, 46%, 42%);
-        }
-        .conditional-inputs {
-            display: none;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-        .conditional-inputs.show {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
+{% extends "base.html" %}
+
+{% block content %}
+<main class="admin-wrapper">
+    <div class="admin-card" style="max-width: 500px; margin: 40px auto;">
+        <header class="admin-header">
+            <div class="ornament">✧</div>
+            <h1>Générer des Graphes</h1>
+            <p class="subtitle">Créez ou mettez à jour les graphiques statistiques de la Maison</p>
+        </header>
+    <div class="luxury-form-container">
         <h1>Générer des Graphes</h1>
         
         {% if message %}
-            <div class="message {% if 'succès' in message or 'généré' in message %}success{% else %}error{% endif %}">
+            <div class="message {% if 'succès' in message or 'généré' in message %}success{% else %}error{% endif %}" style="margin-bottom:20px;">
                 {{ message }}
             </div>
         {% endif %}
         
-        <form method="POST">
+        <form method="POST" class="luxury-form">
             <div class="form-group">
                 <label for="type_graphe">Type de graphe à générer:</label>
                 <select id="type_graphe" name="type_graphe" onchange="toggleFields()">
                     <option value="">-- Sélectionner un graphe --</option>
-                    <option value="utilisateurs"> Nombre d'utilisateurs par mois</option>
-                    <option value="chiffre_affaire"> Chiffre d'affaire (spécifier mois/année)</option>
-                    <option value="distribution"> Distribution des produits</option>
-                    <option value="ventes"> Nombre de ventes par mois</option>
+                    <option value="utilisateurs">Nombre d'utilisateurs par mois (sélectionner mois)</option>
+                    <option value="chiffre_affaire">Chiffre d'affaire (mois/année)</option>
+                    <option value="distribution">Distribution des produits</option>
+                    <option value="ventes">Nombre de ventes par mois (sélectionner mois)</option>
                 </select>
             </div>
 
-            <!-- Champs conditionnels pour le chiffre d'affaire -->
-            <div id="conditional-fields" class="conditional-inputs">
+            <!-- Champs conditionnels pour chaque graphe -->
+            <div id="fields-utilisateurs" class="conditional-inputs" style="background:var(--light-bg); display:none;">
+                <div class="form-group">
+                    <label for="mois_utilisateurs">Mois (format MM, ex: 01, 04, 12):</label>
+                    <input type="text" id="mois_utilisateurs" name="mois_utilisateurs" placeholder="ex: 04" maxlength="2">
+                </div>
+                <div class="form-group">
+                    <label for="annee_utilisateurs">Année (format YYYY, ex: 2024):</label>
+                    <input type="text" id="annee_utilisateurs" name="annee_utilisateurs" placeholder="ex: 2024" maxlength="4">
+                </div>
+            </div>
+            <div id="fields-chiffre" class="conditional-inputs" style="background:var(--light-bg); display:none;">
                 <div class="form-group">
                     <label for="mois">Mois (format MM, ex: 01, 04, 12):</label>
                     <input type="text" id="mois" name="mois" placeholder="ex: 04" maxlength="2">
@@ -150,31 +50,46 @@
                     <input type="text" id="annee" name="annee" placeholder="ex: 2024" maxlength="4">
                 </div>
             </div>
+            <div id="fields-ventes" class="conditional-inputs" style="background:var(--light-bg); display:none;">
+                <div class="form-group">
+                    <label for="mois_ventes">Mois (format MM, ex: 01, 04, 12):</label>
+                    <input type="text" id="mois_ventes" name="mois_ventes" placeholder="ex: 04" maxlength="2">
+                </div>
+                <div class="form-group">
+                    <label for="annee_ventes">Année (format YYYY, ex: 2024):</label>
+                    <input type="text" id="annee_ventes" name="annee_ventes" placeholder="ex: 2024" maxlength="4">
+                </div>
+            </div>
 
-            <div class="buttons">
-                <button type="submit" class="btn-generate">Générer le graphe</button>
-                <a href="/admin" style="text-decoration: none;">
-                    <button type="button" class="btn-back">Retour à l'admin</button>
-                </a>
+            <div class="buttons" style="display:flex; gap:10px; margin-top:20px;">
+                <button type="submit" class="btn-admin btn-admin-flex">Générer le graphe</button>
+                <a href="/admin" class="btn-admin btn-admin-flex" tabindex="0">Retour admin</a>
             </div>
         </form>
 
-        <div class="info">
-            <strong> Info:</strong> Les graphes générés seront sauvegardés dans le dossier <code>static/graphs/</code> et affichés sur la page admin.
+        <div class="info" style="background:var(--beige-light); border-left:4px solid var(--or); color:var(--bordeaux); margin-top:18px; padding:12px 18px; border-radius:6px; font-size:14px;">
+            <strong>Info :</strong> Les graphes générés sont sauvegardés dans <code>static/graphs/</code> et affichés sur la page admin.
         </div>
     </div>
 
     <script>
         function toggleFields() {
             const typeGraphe = document.getElementById('type_graphe').value;
-            const conditionalFields = document.getElementById('conditional-fields');
-            
-            if (typeGraphe === 'chiffre_affaire') {
-                conditionalFields.classList.add('show');
-            } else {
-                conditionalFields.classList.remove('show');
+            // Masquer tous les champs
+            document.getElementById('fields-utilisateurs').style.display = 'none';
+            document.getElementById('fields-chiffre').style.display = 'none';
+            document.getElementById('fields-ventes').style.display = 'none';
+            // Afficher les champs pertinents
+            if (typeGraphe === 'utilisateurs') {
+                document.getElementById('fields-utilisateurs').style.display = 'block';
+            } else if (typeGraphe === 'chiffre_affaire') {
+                document.getElementById('fields-chiffre').style.display = 'block';
+            } else if (typeGraphe === 'ventes') {
+                document.getElementById('fields-ventes').style.display = 'block';
             }
         }
+        // Affichage correct au chargement si retour arrière navigateur
+        window.onload = toggleFields;
     </script>
-</body>
-</html>
+</main>
+{% endblock %}
