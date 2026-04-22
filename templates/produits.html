@@ -40,6 +40,11 @@
                 <form action="/panier/ajouter/{{ produit.id_produit }}" method="POST">
                     <button type="submit">Ajouter au panier</button>
                 </form>
+                {% if session.is_admin %}
+                <form action="/produits/supprimer/{{ produit.id_produit }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
+                    <button type="submit" class="btn-supprimer">Supprimer</button>
+                </form>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
