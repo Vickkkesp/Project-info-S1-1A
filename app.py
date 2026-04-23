@@ -19,6 +19,15 @@ def deconnexion():
 def creastion_compte():
     return render_template("creation_compte.html")
 
+@app.route("/modif")
+def modif():
+    
+    conn = connexion()
+    cursor = conn.cursor()
+
+    return render_template("")
+
+
 @app.route("/ajouter_produit", methods=["GET", "POST"])
 def ajouter_produit():
     error = None
