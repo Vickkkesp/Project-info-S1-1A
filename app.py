@@ -31,11 +31,13 @@ def modif():
 @app.route("/ajouter_produit", methods=["GET", "POST"])
 def ajouter_produit():
     error = None
+    import os
     if request.method == "POST":
         type_bijoux = request.form.get("Type")
         matiere = request.form.get("Matiere")
         nom_bijoux = request.form.get("Nom_Bijoux")
         prix = request.form.get("Prix")
+        image = request.files.get("image")
         try:
             prix = float(prix)
         except (ValueError, TypeError):
@@ -44,17 +46,48 @@ def ajouter_produit():
         try:
             conn = connexion()
             cursor = conn.cursor()
+            # Ajout du produit sans image d'abord
             cursor.execute(
                 "INSERT INTO produits (type_bijoux, matiere, nom_bijoux, prix, stock) VALUES (?, ?, ?, ?, ?)",
-                (type_bijoux, matiere, nom_bijoux, prix, 10)  # Stock par défaut à 10
+                (type_bijoux, matiere, nom_bijoux, prix, 10)
             )
+            id_produit = cursor.lastrowid
             conn.commit()
             conn.close()
+
+            # Sauvegarde de l'image
+            if image:
+                ext = os.path.splitext(image.filename)[1].lower()
+                if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+                    error = "Format d'image non supporté."
+                    return render_template("Ajout_produit.html", error=error)
+                image_path = os.path.join("static", "Images", "produits", f"{id_produit}.jpg")
+                image.save(image_path)
+
             return redirect("/admin")
         except Exception as e:
             error = f"Erreur lors de l'ajout : {e}"
             return render_template("Ajout_produit.html", error=error)
     return render_template("Ajout_produit.html", error=error)
+
+@app.route("/produits/supprimer/<int:id_produit>", methods=["POST"])
+def supprimer_produit(id_produit):
+    if not session.get("is_admin"):
+        return redirect("/login")
+    import os
+    try:
+        conn = connexion()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM produits WHERE id_produit = ?", (id_produit,))
+        conn.commit()
+        conn.close()
+        # Supprimer l'image associée
+        image_path = os.path.join("static", "Images", "produits", f"{id_produit}.jpg")
+        if os.path.exists(image_path):
+            os.remove(image_path)
+    except Exception as e:
+        flash(f"Erreur lors de la suppression : {e}", "error")
+    return redirect(request.referrer or "/admin")
 
 @app.route("/admin")
 def admin():
@@ -190,32 +223,31 @@ def generer_graphes():
     
     if request.method == "POST":
         type_graphe = request.form.get("type_graphe")
-        
         try:
             if type_graphe == "utilisateurs":
-                graphique_utilisateurs()
-                message = "Graphe des utilisateurs généré avec succès!"
+                mois = request.form.get("mois_utilisateurs")
+                annee = request.form.get("annee_utilisateurs")
+                graphique_utilisateurs(mois, annee)
+                message = f"Graphe des utilisateurs généré pour {mois or 'tous les mois'}/{annee or 'toutes les années'} !"
             elif type_graphe == "chiffre_affaire":
                 mois = request.form.get("mois")
                 annee = request.form.get("annee")
-                if mois and annee:
-                    chiffreAffaire(mois, annee)
-                    message = f"Graphe du chiffre d'affaire pour {mois}/{annee} généré avec succès!"
-                else:
-                    message = "Veuillez entrer le mois et l'année!"
+                chiffreAffaire(mois, annee)
+                message = f"Graphe du chiffre d'affaire pour {mois or 'tous les mois'}/{annee or 'toutes les années'} généré avec succès!"
             elif type_graphe == "distribution":
                 distribution_produits()
                 message = "Graphe de distribution des produits généré avec succès!"
             elif type_graphe == "ventes":
-                ventes_par_mois()
-                message = "Graphe des ventes par mois généré avec succès!"
+                mois = request.form.get("mois_ventes")
+                annee = request.form.get("annee_ventes")
+                ventes_par_mois(mois, annee)
+                message = f"Graphe des ventes généré pour {mois or 'tous les mois'}/{annee or 'toutes les années'} !"
             else:
                 message = "Type de graphe invalide!"
         except Exception as e:
             message = f"Erreur lors de la génération du graphe: {str(e)}"
     else:
         message = ""
-    
     return render_template("generer_graphes.html", message=message)
 
 
@@ -449,6 +481,39 @@ def confirmation(id_commande):
                            id_commande=id_commande, 
                            date_livraison=date_formattee)
 
+
+@app.route("/modifier_mdp", methods=["GET", "POST"])
+def modifier_mdp():
+    if "id_utilisateur" not in session:
+        return redirect("/login")
+    error = None
+    success = None
+    if request.method == "POST":
+        ancien_mdp = request.form.get("ancien_mdp")
+        nouveau_mdp = request.form.get("nouveau_mdp")
+        confirmer_mdp = request.form.get("confirmer_mdp")
+        if not ancien_mdp or not nouveau_mdp or not confirmer_mdp:
+            error = "Tous les champs sont obligatoires."
+        elif nouveau_mdp != confirmer_mdp:
+            error = "Les nouveaux mots de passe ne correspondent pas."
+        else:
+            conn = connexion()
+            cursor = conn.cursor()
+            utilisateur = cursor.execute(
+                "SELECT * FROM utilisateurs WHERE id_utilisateur = ? AND password = ?",
+                (session["id_utilisateur"], ancien_mdp)
+            ).fetchone()
+            if not utilisateur:
+                error = "Ancien mot de passe incorrect."
+            else:
+                cursor.execute(
+                    "UPDATE utilisateurs SET password = ? WHERE id_utilisateur = ?",
+                    (nouveau_mdp, session["id_utilisateur"])
+                )
+                conn.commit()
+                success = "Mot de passe modifié avec succès."
+            conn.close()
+    return render_template("modifier_mdp.html", error=error, success=success)
 
 if __name__ == '__main__':
  app.run(debug=True)
